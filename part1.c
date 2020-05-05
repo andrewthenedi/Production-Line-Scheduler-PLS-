@@ -138,108 +138,185 @@ int* remaining(int yyNow, int mmNow, int ddNow, int yy, int mm, int dd)
 
 int main()
 {
-    int dayStart, monStart, yearStart;
-    int dayDue, monDue, yearDue;
-    int dayEnd, monEnd, yearEnd;
-    int quant, i;
-    int startPeriod[100][100];
-    int endPeriod[100];
-    int duePeriod[100];
+    int dayStart[100], monStart[100], yearStart[100];
+    int dayDue[100], monDue[100], yearDue[100];
+    int dayEnd[100], monEnd[100], yearEnd[100];
+    int quant;
+    int startPeriod;
+    int endPeriod;
+    int i, j, k, ctr;
+    // int duePeriod[100];
     int data[100][100][100];
 
-    char orderNum[100];
-    char productName[100];
-    char status[5];
+    char orderNum;
+    char productName;
+    char status[10];
+    char type;
+    char str1[100];
+    char newString[10][10]; 
 
-    while (status == 'YES')
+    printf("~~WELCOME TO PLS~~");
+
+    while (status != "exitPLS")
     {
-        int j = 0;
 
-        printf("\nEnter Order Number: ");
-        scanf("%s", data[i][j++]);
-
-        printf("Enter Quantity: ");
-        scanf("%d", &data[i][j++]);
-        
-        printf("Enter Start Date (YYYY/MM/DD): ");
-        scanf("%d/%d/%d", &data[i][j][0], &data[i][j][1], &data[i][j][2]);
-        int yearStart = data[i][j][0];
-        int monStart = data[i][j][1];
-        int dayStart = data[i][j][2];
-        j++;
-
-        printf("Enter End Date (YYYY/MM/DD): ");
-        scanf("%d/%d/%d", &data[i][j][0], &data[i][j][1], &data[i][j][2]);
-        j++;
-
-        printf("Enter Due Date (YYYY/MM/DD): ");
-        scanf("%d/%d/%d", &data[i][j][0], &data[i][j][1], &data[i][j][2]);
-        int yearDue = data[i][j][0];
-        int monDue = data[i][j][1];
-        int dayDue = data[i][j][2];
-        j++;
-
-        printf("Enter productName: ");
-        scanf("%s", data[i][j]);
-        j++;
-
-        int * diff = remaining(yearStart, monStart, dayStart, yearDue, monDue, dayDue);     //  *(diff + 2) = years, *(diff + 1) = months, *(diff + 0) = days
-        data[i][j][0] = *(diff + 2);
-        data[i][j][1] = *(diff + 1);
-        data[i][j][2] = *(diff + 0);
-
-        printf("Do you still want to add (YES/NO): ");
-        scanf("%s", status);
-
-        if (status == 'YES')
+        printf("Please enter:\n");
+        fgets(str1, sizeof str1, stdin);
+        j=0; ctr=0;
+        for (i = 0; i<=(strlen(str1)); i++)
         {
-            i++;
+            if(str1[i]==' '||str1[i]=='\0')
+            {
+                newString[ctr][j]='\0';
+                ctr++;  //for next word
+                j=0;    //for next word, init index to 0
+            }
+            else
+            {
+                newString[ctr][j]=str1[i];
+                j++;
+            }
         }
-    }
-
-    // int * diff = remaining(monStart, dayStart, yearStart, monDue, dayDue, yearDue);
-
-    // printf("\nOrder Number: %s\n", orderNum);
-    // printf("Quantity (Produced): %d\n", quant);
-    // printf("Difference: %d years %02d months and %02d days.\n", *(diff + 2), *(diff + 1), *(diff + 0));
-    // printf("Product Name: %s\n", productName);
-
-    int pid = 1, fd[2], n;
-    char * output = malloc(sizeof (char) * 100), output2 = malloc(sizeof (char) * 100);
-    
-    if (pipe(fd) < 0)
-    {
-        printf("Pipe creation error\n");
-        exit(1);
-    }
-
-    while (pid == 0)
-    {
-        pid = fork();
-
-        if (pid < 0)
+        if (newString[0] == "addPERIOD")
         {
-            printf("Fork Failed\n");
-            exit(1);
+            int n = strlen(newString);
+
+            for (i=j=0; i<n; i++) 
+            {
+                if (newString[1][i] != "-") 
+                {
+                    newString[1][j++] = newString[1][i]; 
+                }
+            }
+            newString[1][j] = '\0';
+            for (i = 0; i < 4; i++)
+            {
+                yearStart[i] = newString[1][i];
+            }
+            for (i = 4; i < 6; i++)
+            {
+                monStart[i] = newString[1][i];
+            }
+            for (i = 6; i < 8; i++)
+            {
+                dayStart[i] = newString[1][i];
+            }
+
+            data[2][k][0] = yearStart;
+            data[2][k][1] = monStart;
+            data[2][k][2] = dayStart;
+
+            for (i=j=0; i<n; i++) 
+            {
+                if (newString[2][i] != "-") 
+                {
+                    newString[2][j++] = newString[2][i]; 
+                }
+            }
+            newString[2][j] = '\0';
+            for (i = 0; i < 4; i++)
+            {
+                yearEnd[i] = newString[2][i];
+            }
+            for (i = 4; i < 6; i++)
+            {
+                monEnd[i] = newString[2][i];
+            }
+            for (i = 6; i < 8; i++)
+            {
+                dayEnd[i] = newString[2][i];
+            }            
+
+            data[3][k][0] = yearEnd;
+            data[3][k][1] = monEnd;
+            data[3][k][2] = dayEnd;
+            
         }
-        else if (pid == 0)
+        else if (newString[0] == "addORDER")
         {
-            output = Schedule(data);     //  randall function
-            write(fd[1], output, strlen(output));
+            int n = strlen(newString);
+
+            for (i=j=0; i<n; i++) 
+            {
+                if (newString[1][i] != "-") 
+                {
+                    newString[1][j++] = newString[1][i]; 
+                }
+            }
+            newString[1][j] = '\0';
+
+            orderNum = newString[1];
+
+            for (i = 0; i < 4; i++)
+            {
+                yearDue[i] = newString[2][i];
+            }
+            for (i = 4; i < 6; i++)
+            {
+                monDue[i] = newString[2][i];
+            }
+            for (i = 6; i < 8; i++)
+            {
+                dayDue[i] = newString[2][i];
+            }            
+
+            data[4][k][0] = yearDue;
+            data[4][k][1] = monDue;
+            data[4][k][2] = dayDue;
+
+            quant = newString[3];
+
+            productName = newString[4];
+
+        }
+        else if (newString[0] == "runPLS")
+        {
+            int pid = 1, fd[2], n;
+            char * output = malloc(sizeof (char) * 100), output2 = malloc(sizeof (char) * 100);
+            
+            if (pipe(fd) < 0)
+            {
+                printf("Pipe creation error\n");
+                exit(1);
+            }
+
+            pid = fork();
+
+            if (pid < 0)
+            {
+                printf("Fork Failed\n");
+                exit(1);
+            }
+            else if (pid == 0)
+            {
+                output = Schedule(data);     //  randall function
+                write(fd[1], output, strlen(output));
+            }
+            else
+            {
+                n = read(fd[0], output2, strlen(output2));
+                wait(NULL);
+                // printf("");      kev function
+                exit(0);
+            }
+            printf("bye bye\n");
+            close(fd[0]);
+            close(fd[1]);
+            exit(0);
+        }
+        else if (newString[0] == "addBATCH")
+        {
+
+        }
+        else if (newString[0] == "exitPLS")
+        {
+            break;
         }
         else
         {
-            n = read(fd[0], output2, strlen(output2));
-            wait(NULL);
-            // printf("");      kev function
-            exit(0);
+            printf("Invalid input. Please input a valid input.");
         }
+        k++;
     }
-
-    printf("bye bye\n");
-    close(fd[0]);
-    close(fd[1]);
-    exit(0);
-
     // return 0;
 }
