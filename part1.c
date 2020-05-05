@@ -269,40 +269,40 @@ int main()
             productName = newString[4];
 
         }
-        else if (newString[0] == "runPLS")
+        else if (newString[0] == "runPLS" && newString[3] == "printREPORT")
         {
-            int pid = 1, fd[2], n;
-            char * output = malloc(sizeof (char) * 100), output2 = malloc(sizeof (char) * 100);
+            // int pid = 1, fd[2], n;
+            // char algorithm = newString[1], filename = newString[5];
             
-            if (pipe(fd) < 0)
-            {
-                printf("Pipe creation error\n");
-                exit(1);
-            }
+            // if (pipe(fd) < 0)
+            // {
+            //     printf("Pipe creation error\n");
+            //     exit(1);
+            // }
 
-            pid = fork();
+            // pid = fork();
 
-            if (pid < 0)
-            {
-                printf("Fork Failed\n");
-                exit(1);
-            }
-            else if (pid == 0)
-            {
-                output = Schedule(data);     //  randall function
-                write(fd[1], output, strlen(output));
-            }
-            else
-            {
-                n = read(fd[0], output2, strlen(output2));
-                wait(NULL);
-                // printf("");      kev function
-                exit(0);
-            }
-            printf("bye bye\n");
-            close(fd[0]);
-            close(fd[1]);
-            exit(0);
+            // if (pid < 0)
+            // {
+            //     printf("Fork Failed\n");
+            //     exit(1);
+            // }
+            // else if (pid == 0)
+            // {
+            //     filename = Schedule(data, algorithm);     //  randall function
+            //     write(fd[1], filename, 100);
+            // }
+            // else
+            // {
+            //     n = read(fd[0], filename, n);
+            //     wait(NULL);
+            //     // printf("");      kev function
+            //     exit(0);
+            // }
+            // printf("bye bye\n");
+            // close(fd[0]);
+            // close(fd[1]);
+            // exit(0);
         }
         else if (newString[0] == "addBATCH")
         {
