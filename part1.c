@@ -138,8 +138,9 @@ int* remaining(int mmNow, int ddNow, int yyNow, int mm, int dd, int yy)
 
 int main()
 {
-    int day1, mon1, year1;
-    int day, mon, year;
+    int dayStart, monStart, yearStart;
+    int dayDue, monDue, yearDue;
+    int dayEnd, monEnd, yearEnd;
     int quant;
     char orderNum[100];
     char productName[100];
@@ -151,15 +152,18 @@ int main()
     scanf("%d", &quant);
 
     printf("Enter Start Date (MM/DD/YYYY): ");
-    scanf("%d/%d/%d", &mon, &day, &year);
+    scanf("%d/%d/%d", &monStart, &dayStart, &yearStart);
+
+    printf("Enter End Date (MM/DD/YYYY): ");
+    scanf("%d/%d/%d", &monEnd, &dayEnd, &yearEnd);
 
     printf("Enter Due Date (MM/DD/YYYY): ");
-    scanf("%d/%d/%d", &mon1, &day1, &year1);
+    scanf("%d/%d/%d", &monDue, &dayDue, &yearDue);
 
     printf("Enter productName: ");
     scanf("%s", productName);
 
-    int * diff = remaining(mon, day, year, mon1, day1, year1);
+    int * diff = remaining(monStart, dayStart, yearStart, monDue, dayDue, yearDue);
 
     printf("\nOrder Number: %s\n", orderNum);
     printf("Quantity (Produced): %d\n", quant);
@@ -167,7 +171,7 @@ int main()
     printf("Product Name: %s\n", productName);
 
     int pid = 1, fd[2], n;
-    char * output, output2;
+    char * output = malloc(sizeof (char) * 100), output2 = malloc(sizeof (char) * 100);
     
     if (pipe(fd) < 0)
     {
@@ -186,14 +190,14 @@ int main()
         }
         else if (pid == 0)
         {
-            output = Schedule(mon, day, year, mon1, day1, year1);   // randall punya function
+            output = Schedule(monStart, dayStart, yearStart, monDue, dayDue, yearDue, monEnd, dayEnd, yearEnd);     //  randall function
             write(fd[1], output, strlen(output));
         }
         else
         {
             n = read(fd[0], output2, strlen(output2));
             wait(NULL);
-            // print(n);                   kevin punya function
+            // printf("");      kev function
             exit(0);
         }
     }
@@ -205,4 +209,3 @@ int main()
 
     // return 0;
 }
-
