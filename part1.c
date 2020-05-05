@@ -186,14 +186,14 @@ int main()
         }
         else if (pid == 0)
         {
-            output = Schedule(mon, day, year, mon1, day1, year1);
+            output = Schedule(mon, day, year, mon1, day1, year1);   // randall punya function
             write(fd[1], output, strlen(output));
         }
         else
         {
             n = read(fd[0], output2, strlen(output2));
             wait(NULL);
-            printf("");
+            // print(n);                   kevin punya function
             exit(0);
         }
     }
