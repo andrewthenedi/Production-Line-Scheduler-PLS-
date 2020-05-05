@@ -64,7 +64,7 @@ int valid_date(int day, int mon, int year)
     return is_valid;
 }
 
-int* remaining(int mmNow, int ddNow, int yyNow, int mm, int dd, int yy)
+int* remaining(int yyNow, int mmNow, int ddNow, int yy, int mm, int dd)
 {
     int dd_diff, mm_diff, yy_diff;
     int *diff = malloc(sizeof (char) * 3);
@@ -141,34 +141,68 @@ int main()
     int dayStart, monStart, yearStart;
     int dayDue, monDue, yearDue;
     int dayEnd, monEnd, yearEnd;
-    int quant;
+    int quant, i;
+    int startPeriod[100][100];
+    int endPeriod[100];
+    int duePeriod[100];
+    int data[100][100][100];
+
     char orderNum[100];
     char productName[100];
+    char status[5];
 
-    printf("\nEnter Order Number: ");
-    scanf("%s", orderNum);
+    while (status == 'YES')
+    {
+        int j = 0;
 
-    printf("Enter Quantity: ");
-    scanf("%d", &quant);
+        printf("\nEnter Order Number: ");
+        scanf("%s", data[i][j++]);
 
-    printf("Enter Start Date (MM/DD/YYYY): ");
-    scanf("%d/%d/%d", &monStart, &dayStart, &yearStart);
+        printf("Enter Quantity: ");
+        scanf("%d", &data[i][j++]);
+        
+        printf("Enter Start Date (YYYY/MM/DD): ");
+        scanf("%d/%d/%d", &data[i][j][0], &data[i][j][1], &data[i][j][2]);
+        int yearStart = data[i][j][0];
+        int monStart = data[i][j][1];
+        int dayStart = data[i][j][2];
+        j++;
 
-    printf("Enter End Date (MM/DD/YYYY): ");
-    scanf("%d/%d/%d", &monEnd, &dayEnd, &yearEnd);
+        printf("Enter End Date (YYYY/MM/DD): ");
+        scanf("%d/%d/%d", &data[i][j][0], &data[i][j][1], &data[i][j][2]);
+        j++;
 
-    printf("Enter Due Date (MM/DD/YYYY): ");
-    scanf("%d/%d/%d", &monDue, &dayDue, &yearDue);
+        printf("Enter Due Date (YYYY/MM/DD): ");
+        scanf("%d/%d/%d", &data[i][j][0], &data[i][j][1], &data[i][j][2]);
+        int yearDue = data[i][j][0];
+        int monDue = data[i][j][1];
+        int dayDue = data[i][j][2];
+        j++;
 
-    printf("Enter productName: ");
-    scanf("%s", productName);
+        printf("Enter productName: ");
+        scanf("%s", data[i][j]);
+        j++;
 
-    int * diff = remaining(monStart, dayStart, yearStart, monDue, dayDue, yearDue);
+        int * diff = remaining(yearStart, monStart, dayStart, yearDue, monDue, dayDue);     //  *(diff + 2) = years, *(diff + 1) = months, *(diff + 0) = days
+        data[i][j][0] = *(diff + 2);
+        data[i][j][1] = *(diff + 1);
+        data[i][j][2] = *(diff + 0);
 
-    printf("\nOrder Number: %s\n", orderNum);
-    printf("Quantity (Produced): %d\n", quant);
-    printf("Difference: %d years %02d months and %02d days.\n", *(diff + 2), *(diff + 1), *(diff + 0));
-    printf("Product Name: %s\n", productName);
+        printf("Do you still want to add (YES/NO): ");
+        scanf("%s", status);
+
+        if (status == 'YES')
+        {
+            i++;
+        }
+    }
+
+    // int * diff = remaining(monStart, dayStart, yearStart, monDue, dayDue, yearDue);
+
+    // printf("\nOrder Number: %s\n", orderNum);
+    // printf("Quantity (Produced): %d\n", quant);
+    // printf("Difference: %d years %02d months and %02d days.\n", *(diff + 2), *(diff + 1), *(diff + 0));
+    // printf("Product Name: %s\n", productName);
 
     int pid = 1, fd[2], n;
     char * output = malloc(sizeof (char) * 100), output2 = malloc(sizeof (char) * 100);
@@ -190,7 +224,7 @@ int main()
         }
         else if (pid == 0)
         {
-            output = Schedule(monStart, dayStart, yearStart, monDue, dayDue, yearDue, monEnd, dayEnd, yearEnd);     //  randall function
+            output = Schedule(data);     //  randall function
             write(fd[1], output, strlen(output));
         }
         else
