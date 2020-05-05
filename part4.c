@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-
+// testing
 
 /*
 Plant x = 300 per day
@@ -22,7 +22,7 @@ int main(){
     printf("\nAlgorithm used: %s\n", alg);
     char test[] = "2020-05-06"; // change the date to the date input 
     char test2[] = "2020-05-10";
-    char *temp;
+    char *temp; 
     int n = 0; 
     
     char *ptr = strtok(test, "-");
