@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include <time.h>
+// #include <unistd.h>
+#include <string.h>
 
 int valid_date(int day, int mon, int year)    
 {
@@ -62,7 +64,7 @@ int valid_date(int day, int mon, int year)
     return is_valid;
 }
 
-int* schedule(int mmNow, int ddNow, int yyNow, int mm, int dd, int yy)
+int* remaining(int mmNow, int ddNow, int yyNow, int mm, int dd, int yy)
 {
     int dd_diff, mm_diff, yy_diff;
     int *diff = malloc(sizeof (char) * 3);
@@ -157,12 +159,50 @@ int main()
     printf("Enter productName: ");
     scanf("%s", productName);
 
-    int * diff = schedule(mon, day, year, mon1, day1, year1);
+    int * diff = remaining(mon, day, year, mon1, day1, year1);
 
     printf("\nOrder Number: %s\n", orderNum);
     printf("Quantity (Produced): %d\n", quant);
     printf("Difference: %d years %02d months and %02d days.\n", *(diff + 2), *(diff + 1), *(diff + 0));
     printf("Product Name: %s\n", productName);
-    return 0;
+
+    int pid = 1, fd[2], n;
+    char * output, output2;
+    
+    if (pipe(fd) < 0)
+    {
+        printf("Pipe creation error\n");
+        exit(1);
+    }
+
+    while (pid == 0)
+    {
+        pid = fork();
+
+        if (pid < 0)
+        {
+            printf("Fork Failed\n");
+            exit(1);
+        }
+        else if (pid == 0)
+        {
+            output = Schedule(mon, day, year, mon1, day1, year1);
+            write(fd[1], output, strlen(output));
+        }
+        else
+        {
+            n = read(fd[0], output2, strlen(output2));
+            wait(NULL);
+            printf("");
+            exit(0);
+        }
+    }
+
+    printf("bye bye\n");
+    close(fd[0]);
+    close(fd[1]);
+    exit(0);
+
+    // return 0;
 }
 
