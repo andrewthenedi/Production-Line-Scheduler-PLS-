@@ -22,17 +22,25 @@ struct Order
     int quantity;
 };
 
-void FCFS(struct Order orderstack[], struct Date start, struct Date end, int plantprod)
+void FCFS(struct Order orderstack[],struct Order resultstack[], struct Date start, struct Date end, int plantprod, int length)
 {
     
-   
+   for(int i = 0;i < length; i++ )
+   {
+       
+   }
 
+
+   return resultstac;
 }
-void SJF(struct Order orderstack[], struct Date start, struct Date end, int plantprod)
+void SJF(struct Order orderstack[],struct Order resultstack[], struct Date start, struct Date end, int plantprod, int length)
 {
-    
+    for(int i = 0;i < length; i++ )
+   {
+       
+   }
    
-
+    return resultstac;
 }
 
 
@@ -41,7 +49,8 @@ int main(){
 
     //-----------------------GET INFO FROM PART 1--------------------------
 
-    struct order input[];
+    struct Order input[];
+    int inputlength;
     struct Date end;
     struct Date start;
 
@@ -52,11 +61,21 @@ int main(){
 
     //FCFS, SJF, PR
     //get alg from outside
+
+    struct order resultx[];
+    struct order resulty[];
+    struct order resultz[];
     
 
     if(strcmp(alg,"FCFS")==0 || strcmp(alg,"SJF")==0)
     {
-            
+        FCFS(struct input, struct resultx, struct start,struct end, plant_x, inputlength);
+        FCFS(struct input, struct resulty, struct start,struct end, plant_y, inputlength);
+        FCFS(struct input, struct resultz, struct start,struct end, plant_z, inputlength);
+        //send to part3
+        SJF(struct input, struct result, struct start,struct end, plant_x, inputlength);
+        SJF(struct input, struct result, struct start,struct end, plant_y, inputlength);
+        SJF(struct input, struct result, struct start,struct end, plant_z, inputlength);
     }
     else
     {
