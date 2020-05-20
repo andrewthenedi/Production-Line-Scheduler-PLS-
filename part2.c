@@ -26,7 +26,7 @@ int datetoday(int y, int m, int d){
     return 365*y + y/4 - y/100 + y/400 + (m*306 + 5)/10 + ( d - 1 ); 
 }
 
-int datecompare(struct Date date1, struct Date date2)
+int datecompare(struct Date date1, struct Date date2) // Compares to date
 {
     int y1 = date1.year;
     int m1 = date1.month;
@@ -50,16 +50,29 @@ int datecompare(struct Date date1, struct Date date2)
 
     //return 0 = dates are same, 1 = date1 before date2, -1 = date1 after date2
 }
-
-
+/*
+    orderstack comes from input 
+    resultstack is the result you send to output 
+    plantprod is plant production rate e.g, 200 products per day
+*/
 void FCFS(struct Order orderstack[],struct Order resultstack[], struct Date start, struct Date end, int plantprod, int length)
 {
 
-    struct Date currlow = orderstack[0].order_due; 
-    
-   for(int i = 1;i < length; i++ )
+    struct Date currlow; 
+
+	int startint = datetoday(start.year, start.month, start.day);
+	int endint = datetoday(end.year, end.month, end.day);
+
+	for (int currday = startint; currday <= endint; currday++) 
+	{
+
+
+	}
+
+   for(int i = 0;i < length; i++ )
    {
-       
+	   currlow = orderstack[i].order_due;
+
    }
 
 
