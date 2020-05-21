@@ -136,28 +136,62 @@ int* remaining(int yyNow, int mmNow, int ddNow, int yy, int mm, int dd)
     return diff;
 }
 
+int stringToInteger(char string[])
+{
+    int digit, j = 1, m = 0;
+    for (int i = strlen(string)-1; i >=0; i--)
+    {
+        digit = string[i];
+        digit = digit - 48;
+        m = m + (digit * j);
+        j = j * 10;
+    }
+    return m;
+}
+
 int main()
 {
+    struct Start 
+    {
+        int day;
+        int mon;
+        int year;
+    };
+    struct Due
+    {
+        int day;
+        int mon;
+        int year;
+    };
+    struct End
+    {
+        int day;
+        int mon;
+        int year;
+    };
+    struct Input
+    {
+        char *orderID;
+        char *productName; 
+        int quantity;
+    };
+
+    struct Start start[20];
+    struct End end[20];
+    struct Due due[20];
+    struct Input input[20];
     int dayStart[100], monStart[100], yearStart[100];
     int dayDue[100], monDue[100], yearDue[100];
     int dayEnd[100], monEnd[100], yearEnd[100];
-    int quant;
-    int startPeriod;
-    int endPeriod;
-    int i, j, k, ctr;
-    // int duePeriod[100];
-    int data[100][100][100];
-
-    char orderNum;
-    char productName;
-    char status[10];
-    char type;
+    int i, j, ctr;
+    char *alg;
+    int inputLength;
     char str1[100];
     char newString[10][10]; 
 
     printf("~~WELCOME TO PLS~~");
 
-    while (status != "exitPLS")
+    while (true)
     {
 
         printf("Please enter:\n");
@@ -179,11 +213,11 @@ int main()
         }
         if (newString[0] == "addPERIOD")
         {
-            int n = strlen(newString);
+            int n = strlen(newString[0]);
 
             for (i=j=0; i<n; i++) 
             {
-                if (newString[1][i] != "-") 
+                if (newString[1][i] != '-') 
                 {
                     newString[1][j++] = newString[1][i]; 
                 }
@@ -193,22 +227,43 @@ int main()
             {
                 yearStart[i] = newString[1][i];
             }
+            int yearStart_int;
+            for (i = 0; i < sizeof(yearStart); i++)
+            {
+                yearStart_int *= 10;
+                yearStart_int += yearStart[i];
+            }
+
             for (i = 4; i < 6; i++)
             {
                 monStart[i] = newString[1][i];
             }
+            int monStart_int;
+            for (i = 0; i < sizeof(monStart); i++)
+            {
+                monStart_int *= 10;
+                monStart_int += monStart[i];
+            }
+
             for (i = 6; i < 8; i++)
             {
                 dayStart[i] = newString[1][i];
             }
+            int dayStart_int;
+            for (i = 0; i < sizeof(dayStart); i++)
+            {
+                dayStart_int *= 10;
+                dayStart_int += dayStart[i];
+            }
 
-            data[2][k][0] = yearStart;
-            data[2][k][1] = monStart;
-            data[2][k][2] = dayStart;
+            printf("%d",yearStart_int);
+            start->year = yearStart_int;
+            start->mon = monStart_int;
+            start->day = dayStart_int;
 
             for (i=j=0; i<n; i++) 
             {
-                if (newString[2][i] != "-") 
+                if (newString[2][i] != '-') 
                 {
                     newString[2][j++] = newString[2][i]; 
                 }
@@ -218,91 +273,148 @@ int main()
             {
                 yearEnd[i] = newString[2][i];
             }
+            int yearEnd_int;
+            for (i = 0; i < sizeof(yearEnd); i++)
+            {
+                yearEnd_int *= 10;
+                yearEnd_int += yearEnd[i];
+            }
+
             for (i = 4; i < 6; i++)
             {
                 monEnd[i] = newString[2][i];
             }
+            int monEnd_int;
+            for (i = 0; i < sizeof(monEnd); i++)
+            {
+                monEnd_int *= 10;
+                monEnd_int += monEnd[i];
+            }
+
             for (i = 6; i < 8; i++)
             {
                 dayEnd[i] = newString[2][i];
+            }
+            int dayEnd_int;
+            for (i = 0; i < sizeof(dayEnd); i++)
+            {
+                dayEnd_int *= 10;
+                dayEnd_int += dayEnd[i];
             }            
 
-            data[3][k][0] = yearEnd;
-            data[3][k][1] = monEnd;
-            data[3][k][2] = dayEnd;
+            end->year = yearEnd_int;
+            end->mon = monEnd_int;
+            end->day = dayEnd_int;
             
         }
         else if (newString[0] == "addORDER")
         {
-            int n = strlen(newString);
+            int n = strlen(newString[0]);
 
             for (i=j=0; i<n; i++) 
             {
-                if (newString[1][i] != "-") 
+                if (newString[1][i] != '-') 
                 {
                     newString[1][j++] = newString[1][i]; 
                 }
             }
             newString[1][j] = '\0';
 
-            orderNum = newString[1];
+            char orderID_string[100];
+            memcpy(orderID_string, newString[1], sizeof(newString[1]));
+            orderID_string[sizeof(newString[1])] = '\0'; 
+
+            input->orderID = orderID_string;
 
             for (i = 0; i < 4; i++)
             {
                 yearDue[i] = newString[2][i];
             }
+            int yearDue_int;
+            for (i = 0; i < sizeof(yearDue); i++)
+            {
+                yearDue_int *= 10;
+                yearDue_int += yearDue[i];
+            }    
+
             for (i = 4; i < 6; i++)
             {
                 monDue[i] = newString[2][i];
             }
+            int monDue_int;
+            for (i = 0; i < sizeof(monDue); i++)
+            {
+                monDue_int *= 10;
+                monDue_int += monDue[i];
+            }    
+
             for (i = 6; i < 8; i++)
             {
                 dayDue[i] = newString[2][i];
-            }            
+            }        
+            int dayDue_int;
+            for (i = 0; i < sizeof(dayDue); i++)
+            {
+                dayDue_int *= 10;
+                dayDue_int += dayDue[i];
+            }       
 
-            data[4][k][0] = yearDue;
-            data[4][k][1] = monDue;
-            data[4][k][2] = dayDue;
+            due->year = yearDue_int;
+            due->mon = monDue_int;
+            due->day = dayDue_int;
 
-            quant = newString[3];
+            char quantity_string[100];
+            memcpy(quantity_string, newString[3], sizeof(newString[3]));
+            quantity_string[sizeof(newString[3])] = '\0'; 
+            int quantity_int;
+            quantity_int = stringToInteger(quantity_string);
+            input->quantity = quantity_int;
 
-            productName = newString[4];
+            char productName_string[100];
+            memcpy(productName_string, newString[4], sizeof(newString[4]));
+            productName_string[sizeof(newString[4])] = '\0'; 
+            input->productName = productName_string;
 
         }
         else if (newString[0] == "runPLS" && newString[3] == "printREPORT")
         {
-            int pid = 1, fd[2], n;
-            char algorithm = newString[1], filename = newString[5];
+            alg = newString[1];
+            inputLength = sizeof(input) / sizeof(input[0]);
+            Schedule(input, start, end, due, alg, inputLength);
+        //     int pid = 1, fd[2], n;
+        //     char algorithm = newString[1], filename = newString[5];
+        //     Input.alg = newString[1];
             
-            if (pipe(fd) < 0)
-            {
-                printf("Pipe creation error\n");
-                exit(1);
-            }
+        //     if (pipe(fd) < 0)
+        //     {
+        //         printf("Pipe creation error\n");
+        //         exit(1);
+        //     }
 
-            pid = fork();
+        //     pid = fork();
 
-            if (pid < 0)
-            {
-                printf("Fork Failed\n");
-                exit(1);
-            }
-            else if (pid == 0)
-            {
-                filename = Schedule(data, algorithm);     //  randall function
-                write(fd[1], filename, 100);
-            }
-            else
-            {
-                n = read(fd[0], filename, 100);
-                wait(NULL);
-                // printf("");      kev function
-                exit(0);
-            }
-            printf("bye bye\n");
-            close(fd[0]);
-            close(fd[1]);
-            exit(0);
+        //     if (pid < 0)
+        //     {
+        //         printf("Fork Failed\n");
+        //         exit(1);
+        //     }
+        //     else if (pid == 0)
+        //     {
+        //         filename = Schedule(data, algorithm);     //  randall function
+        //         write(fd[1], filename, 100);
+        //     }
+        //     else
+        //     {
+        //         n = read(fd[0], filename, 100);
+        //         wait(NULL);
+        //         // printf("");      kev function
+        //         exit(0);
+        //     }
+        //     printf("bye bye\n");
+        //     close(fd[0]);
+        //     close(fd[1]);
+        //     exit(0);
+        // }
         }
         else if (newString[0] == "addBATCH")
         {
@@ -316,7 +428,5 @@ int main()
         {
             printf("Invalid input. Please input a valid input.");
         }
-        k++;
     }
-    // return 0;
 }
