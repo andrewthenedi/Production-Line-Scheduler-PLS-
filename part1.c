@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include<stdlib.h>
 #include <time.h>
-#include <unistd.h>
+// #include <unistd.h>
 #include <string.h>
 
 int valid_date(int day, int mon, int year)    
@@ -149,284 +149,165 @@ int stringToInteger(char string[])
     return m;
 }
 
+void remove_all_chars(char* str, char c) {
+    char *pr = str, *pw = str;
+    while (*pr) {
+        *pw = *pr++;
+        pw += (*pw != c);
+    }
+    *pw = '\0';
+}
+
+void delchar(char *x,int a, int b)
+{
+	if ((a+b-1) <= strlen(x))
+	{
+		strcpy(&x[b-1],&x[a+b-1]);
+		puts(x);
+	}
+}
+
+void remchar(char *s, char chr)
+{
+   int i, j = 0;
+   for ( i = 0; s[i] != '\0'; i++ ) /* 'i' moves through all of original 's' */
+   {
+      if ( s[i] != chr )
+      {
+         s[j++] = s[i]; /* 'j' only moves after we write a non-'chr' */
+      }
+   }
+   s[j] = '\0'; /* re-null-terminate */
+}
+
 int main()
 {
-    struct Start 
+    struct Date 
     {
-        int day;
-        int mon;
-        int year;
+        int day[100];
+        int mon[100];
+        int year[100];
     };
-    struct Due
+    struct Order
     {
-        int day;
-        int mon;
-        int year;
-    };
-    struct End
-    {
-        int day;
-        int mon;
-        int year;
-    };
-    struct Input
-    {
-        char *orderID;
-        char *productName; 
-        int quantity;
+        char *orderID[100];
+        char *productName[100]; 
+        int quantity[100];
     };
 
-    struct Start start[20];
-    struct End end[20];
-    struct Due due[20];
-    struct Input input[20];
+    struct Date start[20];
+    struct Date end[20];
+    struct Date due[20];
+    struct Order input[20];
+
     int dayStart[100], monStart[100], yearStart[100];
     int dayDue[100], monDue[100], yearDue[100];
     int dayEnd[100], monEnd[100], yearEnd[100];
-    int i, j, ctr;
+
+    int i, j, k, ctr;
     char *alg;
+    int status = 0;
     int inputLength;
+    char* str[100];
     char str1[100];
+    int str2[100];
+    char str3[100];
+    char temp[100];
     char newString[10][10]; 
 
-    printf("~~WELCOME TO PLS~~");
-
-    while (true)
+    while (status == 0)
     {
+
+        printf("~~WELCOME TO PLS~~\n");
 
         printf("Please enter:\n");
         fgets(str1, sizeof str1, stdin);
-        j=0; ctr=0;
-        for (i = 0; i<=(strlen(str1)); i++)
+
+        char* from = str1;
+        char * ch = " ";
+        char * token = strtok(from, ch);
+        int count;
+        while(token!=NULL)
         {
-            if(str1[i]==' '||str1[i]=='\0')
+            // printf("%s\n", token);
+            str[i++] = token;
+            token = strtok(NULL, ch);
+            count++;
+        }
+        strcpy(str1,str[0]);
+        // int ret = strcmp(str1, "addPeriod");
+
+        if (strcmp(str1, "addPERIOD") == 0)
+        {   
+            char * ch1 = "-";
+
+            char* token1 = strtok(str[1], ch1);
+            start->year[i] = atoi(token1);
+            token1 = strtok(NULL, ch1);
+            start->mon[i] = atoi(token1);
+            token1 = strtok(NULL, ch1);
+            start->day[i] = atoi(token1);
+            // printf("%d\n", start->year);
+            // printf("%d\n", start->mon);
+            // printf("%d\n", start->day);
+
+            char* token2 = strtok(str[2], ch1);
+            end->year[i] = atoi(token2);
+            token2 = strtok(NULL, ch1);
+            end->mon[i] = atoi(token2);
+            token2 = strtok(NULL, ch1);
+            end->day[i] = atoi(token2);
+            // printf("%d\n", end->year);
+            // printf("%d\n", end->mon);
+            // printf("%d\n", end->day);
+            i++;
+        }
+        else if (strcmp(str1, "addORDER") == 0)
+        {
+            char * ch1 = "-";
+
+            char* token1 = strtok(str[2], ch1);
+            due->year[j] = atoi(token1);
+            token1 = strtok(NULL, ch1);
+            due->mon[j] = atoi(token1);
+            token1 = strtok(NULL, ch1);
+            due->day[j] = atoi(token1);
+            // printf("%d\n", due->year);
+            // printf("%d\n", due->mon);
+            // printf("%d\n", due->day);
+
+            input->orderID[j] = str[1];
+            input->quantity[j] = atoi(str[3]);
+            input->productName[j] = str[4];
+            // printf("%s\n", input->orderID);
+            // printf("%d\n", input->quantity);
+            // printf("%s\n", input->productName);
+            inputLength++;
+            printf("%d", inputLength);
+            j++;
+            for (k = 0; k < 3; k++)
             {
-                newString[ctr][j]='\0';
-                ctr++;  //for next word
-                j=0;    //for next word, init index to 0
-            }
-            else
-            {
-                newString[ctr][j]=str1[i];
-                j++;
+                printf("%s",input->orderID[k]);
             }
         }
-        if (newString[0] == "addPERIOD")
+        else if (strcmp(str1, "runPLS") == 0)
         {
-            int n = strlen(newString[0]);
-
-            for (i=j=0; i<n; i++) 
-            {
-                if (newString[1][i] != '-') 
-                {
-                    newString[1][j++] = newString[1][i]; 
-                }
-            }
-            newString[1][j] = '\0';
-            for (i = 0; i < 4; i++)
-            {
-                yearStart[i] = newString[1][i];
-            }
-            int yearStart_int;
-            for (i = 0; i < sizeof(yearStart); i++)
-            {
-                yearStart_int *= 10;
-                yearStart_int += yearStart[i];
-            }
-
-            for (i = 4; i < 6; i++)
-            {
-                monStart[i] = newString[1][i];
-            }
-            int monStart_int;
-            for (i = 0; i < sizeof(monStart); i++)
-            {
-                monStart_int *= 10;
-                monStart_int += monStart[i];
-            }
-
-            for (i = 6; i < 8; i++)
-            {
-                dayStart[i] = newString[1][i];
-            }
-            int dayStart_int;
-            for (i = 0; i < sizeof(dayStart); i++)
-            {
-                dayStart_int *= 10;
-                dayStart_int += dayStart[i];
-            }
-
-            printf("%d",yearStart_int);
-            start->year = yearStart_int;
-            start->mon = monStart_int;
-            start->day = dayStart_int;
-
-            for (i=j=0; i<n; i++) 
-            {
-                if (newString[2][i] != '-') 
-                {
-                    newString[2][j++] = newString[2][i]; 
-                }
-            }
-            newString[2][j] = '\0';
-            for (i = 0; i < 4; i++)
-            {
-                yearEnd[i] = newString[2][i];
-            }
-            int yearEnd_int;
-            for (i = 0; i < sizeof(yearEnd); i++)
-            {
-                yearEnd_int *= 10;
-                yearEnd_int += yearEnd[i];
-            }
-
-            for (i = 4; i < 6; i++)
-            {
-                monEnd[i] = newString[2][i];
-            }
-            int monEnd_int;
-            for (i = 0; i < sizeof(monEnd); i++)
-            {
-                monEnd_int *= 10;
-                monEnd_int += monEnd[i];
-            }
-
-            for (i = 6; i < 8; i++)
-            {
-                dayEnd[i] = newString[2][i];
-            }
-            int dayEnd_int;
-            for (i = 0; i < sizeof(dayEnd); i++)
-            {
-                dayEnd_int *= 10;
-                dayEnd_int += dayEnd[i];
-            }            
-
-            end->year = yearEnd_int;
-            end->mon = monEnd_int;
-            end->day = dayEnd_int;
-            
+            char * alg = str[1];
+            printf("%s\n", alg);
+            // Schedule(input, start, end, due, alg, inputLength);
         }
-        else if (newString[0] == "addORDER")
-        {
-            int n = strlen(newString[0]);
-
-            for (i=j=0; i<n; i++) 
-            {
-                if (newString[1][i] != '-') 
-                {
-                    newString[1][j++] = newString[1][i]; 
-                }
-            }
-            newString[1][j] = '\0';
-
-            char orderID_string[100];
-            memcpy(orderID_string, newString[1], sizeof(newString[1]));
-            orderID_string[sizeof(newString[1])] = '\0'; 
-
-            input->orderID = orderID_string;
-
-            for (i = 0; i < 4; i++)
-            {
-                yearDue[i] = newString[2][i];
-            }
-            int yearDue_int;
-            for (i = 0; i < sizeof(yearDue); i++)
-            {
-                yearDue_int *= 10;
-                yearDue_int += yearDue[i];
-            }    
-
-            for (i = 4; i < 6; i++)
-            {
-                monDue[i] = newString[2][i];
-            }
-            int monDue_int;
-            for (i = 0; i < sizeof(monDue); i++)
-            {
-                monDue_int *= 10;
-                monDue_int += monDue[i];
-            }    
-
-            for (i = 6; i < 8; i++)
-            {
-                dayDue[i] = newString[2][i];
-            }        
-            int dayDue_int;
-            for (i = 0; i < sizeof(dayDue); i++)
-            {
-                dayDue_int *= 10;
-                dayDue_int += dayDue[i];
-            }       
-
-            due->year = yearDue_int;
-            due->mon = monDue_int;
-            due->day = dayDue_int;
-
-            char quantity_string[100];
-            memcpy(quantity_string, newString[3], sizeof(newString[3]));
-            quantity_string[sizeof(newString[3])] = '\0'; 
-            int quantity_int;
-            quantity_int = stringToInteger(quantity_string);
-            input->quantity = quantity_int;
-
-            char productName_string[100];
-            memcpy(productName_string, newString[4], sizeof(newString[4]));
-            productName_string[sizeof(newString[4])] = '\0'; 
-            input->productName = productName_string;
-
-        }
-        else if (newString[0] == "runPLS" && newString[3] == "printREPORT")
-        {
-            alg = newString[1];
-            inputLength = sizeof(input) / sizeof(input[0]);
-            Schedule(input, start, end, due, alg, inputLength);
-        //     int pid = 1, fd[2], n;
-        //     char algorithm = newString[1], filename = newString[5];
-        //     Input.alg = newString[1];
-            
-        //     if (pipe(fd) < 0)
-        //     {
-        //         printf("Pipe creation error\n");
-        //         exit(1);
-        //     }
-
-        //     pid = fork();
-
-        //     if (pid < 0)
-        //     {
-        //         printf("Fork Failed\n");
-        //         exit(1);
-        //     }
-        //     else if (pid == 0)
-        //     {
-        //         filename = Schedule(data, algorithm);     //  randall function
-        //         write(fd[1], filename, 100);
-        //     }
-        //     else
-        //     {
-        //         n = read(fd[0], filename, 100);
-        //         wait(NULL);
-        //         // printf("");      kev function
-        //         exit(0);
-        //     }
-        //     printf("bye bye\n");
-        //     close(fd[0]);
-        //     close(fd[1]);
-        //     exit(0);
-        // }
-        }
-        else if (newString[0] == "addBATCH")
+        else if (strcmp(str1, "addBATCH") == 0)
         {
 
         }
-        else if (newString[0] == "exitPLS")
+        else if (strcmp(str1, "exitPLS") == 0)
         {
-            break;
+            printf("Bye-bye!");
+            status = 1;
         }
         else
         {
-            printf("Invalid input. Please input a valid input.");
+            printf("Invalid Input!");   
         }
     }
 }
