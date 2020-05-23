@@ -22,10 +22,9 @@ struct Order {
 	char name[100][100];
 	struct Date order_due[100];
 	int quantity[100];
-	struct Date dates[100];
 	char process_by_date[100][100];
 	int production_by_date[100];
-  struct Date startorder;
+  	struct Date startorder;
 	struct Date endorder;
 	char plant;
 };
