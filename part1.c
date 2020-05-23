@@ -4,6 +4,13 @@
 // #include <unistd.h>
 #include <string.h>
 
+
+/*
+ apparently strtok does not works well in this situation 
+ The pointer is such a mess 
+ 
+*/ 
+
 // int valid_date(int day, int mon, int year)    
 // {
 //     int is_valid = 1, is_leap = 0;
@@ -136,49 +143,18 @@
 //     return diff;
 // }
 
-// int stringToInteger(char string[])
-// {
-//     int digit, j = 1, m = 0;
-//     for (int i = strlen(string)-1; i >=0; i--)
-//     {
-//         digit = string[i];
-//         digit = digit - 48;
-//         m = m + (digit * j);
-//         j = j * 10;
-//     }
-//     return m;
-// }
 
-// void remove_all_chars(char* str, char c) {
-//     char *pr = str, *pw = str;
-//     while (*pr) {
-//         *pw = *pr++;
-//         pw += (*pw != c);
-//     }
-//     *pw = '\0';
-// }
+void getsubstring(char origin[], char cpy[], int from, int end){
+    if(end < 0){
+        end = strlen(origin);
+    }
+    // printf("from %d to %d", from, end);
+    // printf("%d\n", end-from);
+    strncpy(cpy, &origin[from], end - from);
+    cpy[end] = 0;
+    // printf("test %s, from %d to %d\n", cpy, from, end);
+}
 
-// void delchar(char *x,int a, int b)
-// {
-// 	if ((a+b-1) <= strlen(x))
-// 	{
-// 		strcpy(&x[b-1],&x[a+b-1]);
-// 		puts(x);
-// 	}
-// }
-
-// void remchar(char *s, char chr)
-// {
-//    int i, j = 0;
-//    for ( i = 0; s[i] != '\0'; i++ ) /* 'i' moves through all of original 's' */
-//    {
-//       if ( s[i] != chr )
-//       {
-//          s[j++] = s[i]; /* 'j' only moves after we write a non-'chr' */
-//       }
-//    }
-//    s[j] = '\0'; /* re-null-terminate */
-// }
 
 int main()
 {
@@ -195,16 +171,20 @@ int main()
         int quantity[100];
     };
 
+    // buffers
     char* from, userInput[100];
-    char * req[100];
+    char req[30];
     char * startDate[100];
     char * endDate[100];
     char * dueDate[100];
-    int i, status, n, j;
+
+    // status codes    
+    int i = 0, status, n, j = 0;
     char * blank = " ";
     char * stp = "-";
     char * token;
 
+    // orders 
     struct Date start[20];
     struct Date end[20];
     struct Date due[20];
@@ -214,89 +194,313 @@ int main()
     while (status == 0)
     {
         printf("Please enter:\n");
+        printf("i is now %d\n", i);
         fgets(userInput, sizeof userInput, stdin);
 
         from = userInput;
-        token = strtok(from, blank);
+        // token = strtok(from, blank);
 
-        req[j] = token;
-        token = strtok(NULL, blank);
+    
+        int from1, end1;
 
-        if (strcmp(req[j], "addPERIOD") == 0)
-        {
-            startDate[0] = token;
-            token = strtok(NULL, blank);
-            endDate[0] = token;
-
-            token = strtok(startDate[0], stp);
-            start->year[0] = atoi(token); 
-            token = strtok(NULL, stp);
-            start->mon[0] = atoi(token);
-            token = strtok(NULL, stp);
-            start->day[0] = atoi(token);
-            // printf("%d\n", start->year[0]);
-            // printf("%d\n", start->mon[0]);
-            // printf("%d\n", start->day[0]);
-
-            token = strtok(endDate[0], stp);
-            end->year[0] = atoi(token); 
-            token = strtok(NULL, stp);
-            end->mon[0] = atoi(token);
-            token = strtok(NULL, stp);
-            end->day[0] = atoi(token);
-            // printf("%d\n", end->year[0]);
-            // printf("%d\n", end->mon[0]);
-            // printf("%d\n", end->day[0]);
+        // find the space
+        for(int k = 0; k < strlen(from); k++){
+            if(from[k] != ' '){
+                from1 = k; 
+                end1 = k; 
+                while(from[end1] != ' ' && end1 < strlen(from))   end1++;
+                // printf("from is %d, end is %d\n", from1, end1); 
+                getsubstring(from, req, from1, end1);
+                // printf("its %s\n", req);
+                break;
+            }
         }
-        else if (strcmp(req[j], "addORDER") == 0)
+
+        // req[j] = token;
+        // token = strtok(NULL, blank);
+        printf("%s\n", req);
+        if (strcmp(req, "addPERIOD") == 0)
         {
-            input->orderID[i] = token;
-            token = strtok(NULL, blank);
-            dueDate[i] = token;
-            token = strtok(NULL, blank);
-            input->quantity[i] = atoi(token);
-            token = strtok(NULL, blank);
-            input->productName[i] = token;
-            // printf("%s\n", input->orderID[i]);
-            // printf("%s\n", dueDate[i]);
-            // printf("%d\n", input->quantity[i]);
-            // printf("%s\n", input->productName[i]);
 
-            token = strtok(dueDate[i], stp);
-            due->year[i] = atoi(token); 
-            token = strtok(NULL, stp);
-            due->mon[i] = atoi(token);
-            token = strtok(NULL, stp);
-            due->day[i] = atoi(token);
-            // printf("%d\n", due->year[i]);
-            // printf("%d\n", due->mon[i]);
-            // printf("%d\n", due->day[i]);
+            char tempdate[30];
+            /*Split again*/
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+            
+            char date1[15];
+            printf("%s\n", tempdate);
+            int from2, end2; 
+            /* split the - in the date */
+             for(int k = 0; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            start->year[0] = atoi(date1);
+            printf("check2 %d\n", start->year[0]);
 
-            for (n = 0; n < 3; n++)
-            {
-                printf("%s",input->orderID[n]);
-            }  
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            printf("check %s\n", date1);
+            start->mon[0] = atoi(date1);
+
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            printf("check %s\n", date1);
+            start->day[0] = atoi(date1);
+
+            /* DATE 1 IS DONE */ 
+
+            memset(tempdate, 0, 30);
+
+            /*Split again*/
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+            
+            printf("%s\n", tempdate);
+            from2 = end2 = 0;
+            // int from2, end2; 
+            /* split the - in the date */
+             for(int k = 0; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            start->year[0] = atoi(date1);
+            printf("check2 %d\n", start->year[0]);
+
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            printf("check %s\n", date1);
+            start->mon[0] = atoi(date1);
+
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            printf("check %s\n", date1);
+            start->day[0] = atoi(date1);
+            
+        }
+        else if (strcmp(req, "addORDER") == 0)
+        {
+            printf("this is addORDER\n");
+
+            char tempdate[30];
+            /*Split again*/
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+
+            // printf("ez %s\n", tempdate);
+            input->orderID[i] = tempdate; 
+            memset(tempdate, 0, 30);
+
+            // the date 
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+            
+            char date1[15];
+            // printf("%s\n", tempdate);
+            int from2, end2; 
+            /* split the - in the date */
+             for(int k = 0; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            due->year[i] = atoi(date1);
+            // printf("check2 %d\n", start->year[0]);
+
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            // printf("check %s\n", date1);
+            due->mon[i] = atoi(date1);
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            // printf("check %s\n", date1);
+            due->day[i] = atoi(date1);
+
+            memset(tempdate, 0, 30);
+
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+
+            printf("ez %s\n", tempdate);
+            input->quantity[i] = atoi(tempdate);
+
+
+            memset(tempdate, 0, 30);
+
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+
+            printf("ez %s\n", tempdate);
+            input->productName[i] = tempdate;
             i++;
+            // split the date
+
+
+        //     input->orderID[i] = token;
+        //     token = strtok(NULL, blank);
+        //     dueDate[i] = token;
+        //     token = strtok(NULL, blank);
+        //     input->quantity[i] = atoi(token);
+        //     token = strtok(NULL, blank);
+        //     input->productName[i] = token;
+        //     printf("%s\n", input->orderID[i]);
+        //     // printf("%s\n", dueDate[i]);
+        //     // printf("%d\n", input->quantity[i]);
+        //     // printf("%s\n", input->productName[i]);
+
+        //     token = strtok(dueDate[i], stp);
+        //     due->year[i] = atoi(token); 
+        //     token = strtok(NULL, stp);
+        //     due->mon[i] = atoi(token);
+        //     token = strtok(NULL, stp);
+        //     due->day[i] = atoi(token);
+        //     // printf("%d\n", due->year[i]);
+        //     // printf("%d\n", due->mon[i]);
+        //     // printf("%d\n", due->day[i]);
+
+        //     // for (n = 0; n < 3; n++)
+        //     // {
+        //     //     printf("%s",input->orderID[n]);
+        //     // }  
+        //     i++;
         }
-        else if (strcmp(req[j], "exitPLS") == 0)
+        else if (strcmp(req, "exitPLS") == 0)
         {
             printf("Bye-bye!\n");
             status = 1;
+            
         }
-        else if (strcmp(req[j], "runPLS") == 0)
+        else if (strcmp(req, "runPLS") == 0)
         {
-            char * alg = token;
-            token = strtok(NULL, blank);
-            printf("%s\n", alg);
-            for (n = 0; n < 3; n++)
-            {
-                printf("%s\n",input->orderID[n]);
-            }  
+            printf("this is runPLS\n");
+            for(int n = 0; n < i; n++){
+                printf("%s\n", input->orderID[n]);
+            }
+            // char * alg = token;
+            // token = strtok(NULL, blank);
+            // printf("%s\n", input->orderID[0]);
+
             // Schedule(input, start, end, due, alg, i);    dal's function
         }
         else
         {
-            printf("Invalid Input!");   
+            printf("Invalid Input!\n");   
         }
         // for (n = 0; n < 3; n++)
         // {
