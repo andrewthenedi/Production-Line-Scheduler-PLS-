@@ -22,6 +22,7 @@ struct Order {
 	char name[100][100];
 	struct Date order_due[100];
 	int quantity[100];
+    // order_id, name, order_due and quantity has synchronized indexes.
 	char process_by_date[100][100];
 	int production_by_date[100];
   	struct Date startorder;
