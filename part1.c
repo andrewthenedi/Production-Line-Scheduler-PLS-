@@ -272,22 +272,26 @@ int main()
             // printf("%d\n", due->mon[i]);
             // printf("%d\n", due->day[i]);
 
-            // for (n = 0; n < 3; n++)
-            // {
-            //     printf("%s",input->orderID[n]);
-            // }  
+            for (n = 0; n < 3; n++)
+            {
+                printf("%s",input->orderID[n]);
+            }  
             i++;
         }
-        else if (strcmp(req[i], "exitPLS") == 0)
+        else if (strcmp(req[j], "exitPLS") == 0)
         {
             printf("Bye-bye!\n");
             status = 1;
         }
-        else if (strcmp(req, "runPLS") == 0)
+        else if (strcmp(req[j], "runPLS") == 0)
         {
             char * alg = token;
             token = strtok(NULL, blank);
             printf("%s\n", alg);
+            for (n = 0; n < 3; n++)
+            {
+                printf("%s\n",input->orderID[n]);
+            }  
             // Schedule(input, start, end, due, alg, i);    dal's function
         }
         else
