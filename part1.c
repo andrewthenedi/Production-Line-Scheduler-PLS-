@@ -345,6 +345,7 @@ int main()
             printf("this is addORDER\n");
 
             char tempdate[30];
+            memset(tempdate, 0, 30);
             /*Split again*/
             for(int k = end1; k < strlen(from); k++){
                 
