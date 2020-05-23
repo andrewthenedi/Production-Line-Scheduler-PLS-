@@ -283,6 +283,13 @@ int main()
             printf("Bye-bye!\n");
             status = 1;
         }
+        else if (strcmp(req, "runPLS") == 0)
+        {
+            char * alg = token;
+            token = strtok(NULL, blank);
+            printf("%s\n", alg);
+            // Schedule(input, start, end, due, alg, i);    dal's function
+        }
         else
         {
             printf("Invalid Input!");   
