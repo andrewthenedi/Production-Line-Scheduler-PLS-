@@ -11,11 +11,13 @@ struct Date //YYYY-MM-DD
 };
 
 struct Order {
-	char *order_id[100];
-	char *name[100];
+	char order_id[100][100];
+	char name[100][100];
 	struct Date order_due[100];
 	int quantity[100];
 	struct Date dates[100];
+	char process_by_date[100][100];
+	int production_by_date[100];
 	struct Date startorder;
 	struct Date endorder;
 	char plant;
@@ -37,44 +39,76 @@ int datecompare(struct Date date1, struct Date date2) // Compares to date
 	int m2 = date2.month;
 	int d2 = date2.day;
 
-	if (datetoday(y1, m1, d1) == datetoday(y2, m2, d2))
-	{
-		return 0;
-	}
-	else if (datetoday(y1, m1, d1) > datetoday(y2, m2, d2))
-	{
-		return -1;
-	}
-	else if (datetoday(y1, m1, d1) < datetoday(y2, m2, d2))
-	{
-		return 1;
-	}
+	int temp = 0;
+	
+	temp = datetoday(y1, m1, d1) - datetoday(y2, m2, d2);
+	return temp;
+	
 
-	//return 0 = dates are same, 1 = date1 before date2, -1 = date1 after date2
+	//return 0 = dates are same, n = date1 before date2, -n = date1 after date2
 }
 /*
 	orderstack comes from input
 	resultstack is the result you send to output
 	plantprod is plant production rate e.g, 200 products per day
 */
-void FCFS(struct Order orderstack, struct Date start, struct Date end, int plantprod, int length)
+void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length)
 {
+	
 
-	struct Date currlow;
+	int startint = datetoday(orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
+	int endint = datetoday(orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
 
-	int startint = datetoday(start.year, start.month, start.day);
-	int endint = datetoday(end.year, end.month, end.day);
+	/*char order_id[100][100];
+	char name[100][100];
+	struct Date order_due[100];
+	int quantity[100];
+	struct Date dates[100];
+	char process_by_date[100][100];
+	int production_by_date[100];
+	struct Date startorder;
+	struct Date endorder;
+	char plant;*/
 
-	for (int currday = startint; currday <= endint; currday++)
+	
+
+	int plant_x = 300;
+	int plant_y = 400;
+	int plant_z = 500;
+
+	int prodx=0;
+	int prody=0;
+	int prodz=0;
+
+	int xiter = 0;
+	int yiter = 0;
+	int ziter = 0;
+
+	int i = 0;
+	for (int curr = 0; curr < length; curr++) 
 	{
+		if (prodx == 0)
+		{
+			prodx = orderstack.quantity[curr];
+			strcpy(resultx.order_id[xiter], orderstack.order_id[curr]);
+			xiter++;
+		}
+		else if (prody == 0)
+		{
+			prody = orderstack.quantity[curr];
+			strcpy(resulty.order_id[yiter], orderstack.order_id[curr]);
+			yiter++;
+		}
+		else if (prodz == 0)
+		{
+			prodz = orderstack.quantity[curr];
+			strcpy(resultz.order_id[ziter], orderstack.order_id[curr]);
+			ziter++;
+		}
+		else //alll the factories are preoccupied
+		{
 
-
-	}
-
-	for (int i = 0; i < length; i++)
-	{
-		currlow = orderstack.order_due[i];
-
+		}
 	}
 
 
@@ -114,16 +148,14 @@ int main() {
 	struct Order resulty;
 	struct Order resultz;
 
+	//struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length
 
 	if (strcmp(alg, "FCFS") == 0 || strcmp(alg, "SJF") == 0)
 	{
-		FCFS(input, start, end, plant_x, inputlength);
-		FCFS(input, start, end, plant_y, inputlength);
-		FCFS(input, start, end, plant_z, inputlength);
+		FCFS(input, resultx, resulty, resultz, inputlength);
+		
 		//send to part3
-		SJF(input, start, end, plant_x, inputlength);
-		SJF(input, start, end, plant_y, inputlength);
-		SJF(input, start, end, plant_z, inputlength);
+		
 	}
 	else
 	{
