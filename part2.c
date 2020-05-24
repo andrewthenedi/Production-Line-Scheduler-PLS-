@@ -53,7 +53,7 @@ int datecompare(struct Date date1, struct Date date2) // Compares to date
 */
 void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length)
 {
-	
+
 
 	int startint = datetoday(orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
 	int endint = datetoday(orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
@@ -93,90 +93,145 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 	//plant production queue
 
-	int prodx=0;
-	int prody=0;
-	int prodz=0;
+	int prodx = 0;
+	int prody = 0;
+	int prodz = 0;
 
 	int xiter = 0;
 	int yiter = 0;
 	int ziter = 0;
 
+	int endprodx = 0;
+	int endprody = 0;
+	int endprodz = 0;
+
 	int curr = 0;
 
-	while(currday != endint)
+	while (currday != endint)
 	{
 		//assign production to factories x to y to z
-		if (prodx == 0)
-		{
-			//initialize starting values 
-			strcpy(resultx.order_id[xiter], orderstack.order_id[curr]);
-			strcpy(resultx.name[xiter], orderstack.name[curr]);
-			resultx.order_due[xiter] = orderstack.order_due[curr];		//shallow copy
-			resultx.quantity[xiter] = orderstack.quantity[curr];
+		
+			if (prodx == 0)
+			{
+				if (curr < length)
+				{
+					//initialize starting values 
+					strcpy(resultx.order_id[xiter], orderstack.order_id[curr]);
+					strcpy(resultx.name[xiter], orderstack.name[curr]);
+					resultx.order_due[xiter] = orderstack.order_due[curr];		//shallow copy
+					resultx.quantity[xiter] = orderstack.quantity[curr];
 
-			prodx = orderstack.quantity[curr];
-			xiter++;
-			curr++;
-		}
-		if (prody == 0)
-		{
-			//initialize starting values 
-			strcpy(resulty.order_id[yiter], orderstack.order_id[curr]);
-			strcpy(resulty.name[yiter], orderstack.name[curr]);
-			resulty.order_due[yiter] = orderstack.order_due[curr];		//shallow copy
-			resulty.quantity[yiter] = orderstack.quantity[curr];
+					prodx = orderstack.quantity[curr];
+					xiter++;
+					curr++;
+				}
+				else
+				{
+					endprodx = 1;
+				}
+			}
+			if (prody == 0)
+			{
+				if (curr < length)
+				{
+					//initialize starting values 
+					strcpy(resulty.order_id[yiter], orderstack.order_id[curr]);
+					strcpy(resulty.name[yiter], orderstack.name[curr]);
+					resulty.order_due[yiter] = orderstack.order_due[curr];		//shallow copy
+					resulty.quantity[yiter] = orderstack.quantity[curr];
 
-			prody = orderstack.quantity[curr];
-			yiter++;
-			curr++;
-		}
-		if (prodz == 0)
-		{
-			//initialize starting values 
-			strcpy(resultz.order_id[ziter], orderstack.order_id[curr]);
-			strcpy(resultz.name[ziter], orderstack.name[curr]);
-			resultz.order_due[ziter] = orderstack.order_due[curr];		//shallow copy
-			resultz.quantity[ziter] = orderstack.quantity[curr];
+					prody = orderstack.quantity[curr];
+					yiter++;
+					curr++;
+				}
+				else
+				{
+					endprody = 1;
+				}
+			}
+			if (prodz == 0)
+			{
+				if (curr < length)
+				{
+					//initialize starting values 
+					strcpy(resultz.order_id[ziter], orderstack.order_id[curr]);
+					strcpy(resultz.name[ziter], orderstack.name[curr]);
+					resultz.order_due[ziter] = orderstack.order_due[curr];		//shallow copy
+					resultz.quantity[ziter] = orderstack.quantity[curr];
 
-			prodz = orderstack.quantity[curr];
-			ziter++;
-			curr++;
-		}
-
-		//process values
-
-
-		char process_by_date[100][100];
-		int production_by_date[100];
-
-
-		strcpy(resultx.process_by_date[currday],resultx.order_id[xiter]);
-		strcpy(resulty.process_by_date[currday], resulty.order_id[yiter]);
-		strcpy(resultz.process_by_date[currday], resultz.order_id[ziter]);
-
-		resultx.production_by_date[currday] = prodx;
-		resulty.production_by_date[currday] = prody;
-		resultz.production_by_date[currday] = prodz;
-
-		if (prodx < 300) {
-			resultx.production_by_date[currday] = prodx;
-		}
-		if (prody < 400) {
-			resulty.production_by_date[currday] = prody;
-		}
-		if (prodz < 500) {
-			resultz.production_by_date[currday] = prodz;
-		}
+					prodz = orderstack.quantity[curr];
+					ziter++;
+					curr++;
+				}
+				else
+				{
+					endprodz = 1;
+				}
+			}
 
 
-		prodx = prodx - 300;
-		prody = prody - 400;
-		prodz = prodz - 500;
+			//process values
+			
+			if (endprodx == 0) 
+			{
+				strcpy(resultx.process_by_date[currday], resultx.order_id[xiter]);
+				resultx.production_by_date[currday] = 300;
+				
+				if (prodx < 300)
+				{
+					resultx.production_by_date[currday] = prodx;
+				}
+				
+				prodx = prodx - 300;
+			}
+			else
+			{
+				resultx.production_by_date[currday] = 0;
+				strcpy(resultx.process_by_date[currday], "NA");
 
-		currday++;
+			}
+
+			if (endprody == 0)
+			{
+				strcpy(resulty.process_by_date[currday], resulty.order_id[yiter]);
+				resulty.production_by_date[currday] = 400;
+
+				if (prody < 400)
+				{
+					resulty.production_by_date[currday] = prody;
+				}
+				
+				prody = prody - 400;
+			}
+			else
+			{
+				resulty.production_by_date[currday] = 0;
+				strcpy(resulty.process_by_date[currday], "NA");
+
+			}
+
+			if (endprodz == 0)
+			{
+				strcpy(resultz.process_by_date[currday], resultz.order_id[ziter]);
+				resultz.production_by_date[currday] = 500;
+				
+				if (prodz < 500)
+				{
+					resultz.production_by_date[currday] = prodz;
+				}
+
+				prodz = prodz - 500;
+			}
+			else
+			{
+				resultz.production_by_date[currday] = 0;
+				strcpy(resultz.process_by_date[currday], "NA");
+
+			}
+
+			currday++;
+
 	}
-
-
 }
 void SJF(struct Order orderstack, struct Date start, struct Date end, int plantprod, int length)
 {
@@ -220,7 +275,9 @@ int main() {
 		FCFS(input, resultx, resulty, resultz, inputlength);
 		
 		//send to part3
-		
+		//OutputModule(resultx, "FCFS")
+		//OutputModule(resulty, "FCFS")
+		//OutputModule(resultz, "FCFS")
 	}
 	else
 	{
