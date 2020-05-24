@@ -329,7 +329,7 @@ int main() {
 
     input.endorder.year = 2020;
     input.endorder.month = 3;
-    input.endorder.day = 28;
+    input.endorder.day = 26;
 	// dateinput(input.endorder, 2020, 5, 20);
 
 	//
@@ -340,7 +340,7 @@ int main() {
 	struct Order resultx;
 	struct Order resulty;
 	struct Order resultz;
-
+    // struct Order
 	//struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length
 	inputlength = 4;
 	if ((strcmp(alg, "FCFS") == 0) || (strcmp(alg, "SJF") == 0))
@@ -349,7 +349,43 @@ int main() {
 
 		FCFS(input, resultx, resulty, resultz, inputlength);
 
-		
+		/*This is SJF now*/
+        for(int i = 0; i < inputlength; i++){
+            for(int j = 0; j < inputlength-i-1; j++){
+                if(input.quantity[j] > input.quantity[j+1]){
+                    // swapping, its not easy on the eye
+                    char tempchar[100]; 
+                    int tempint; 
+                    struct Date tempdate; 
+                    strcpy(tempchar, input.order_id[j]);
+                    strcpy(input.order_id[j], input.order_id[j+1]);
+                    strcpy(input.order_id[j+1], tempchar);
+
+                    //reset 
+                    memset(tempchar, 0, 100);
+                    strcpy(tempchar, input.name[j]);
+                    strcpy(input.name[j], input.name[j+1]);
+                    strcpy(input.name[j+1], tempchar);
+
+                    //reset char
+                    memset(tempchar, 0, 100);
+                    tempdate = input.order_due[j];
+                    input.order_due[j] = input.order_due[j+1];
+                    input.order_due[j+1] = tempdate;
+
+                    tempint = input.quantity[j];
+                    input.quantity[j] = input.quantity[j+1];
+                    input.quantity[j+1] = tempint;
+
+                    //order_id_by_date and production_by_date no need to swap\
+                    // the rest too
+
+                }
+            }
+        }
+
+        // SJF LMAO
+        FCFS(input, resultx, resulty, resultz, inputlength);
 		//send to part3
 		//OutputModule(resultx, "FCFS")
 		//OutputModule(resulty, "FCFS")
