@@ -57,7 +57,7 @@ char* filldatelist(struct Date start, struct Date end, int totaldays) {
     for(int i = 0; i < totaldays; i++){ // iterate day, update year & month
         sprintf(date, "%d-%d-%d", y, m, d);
 
-        datelist[i] = date;
+        strcpy(datelist[i], date);
         
         d++;
 
@@ -110,7 +110,11 @@ void OutputModule(struct Order resultstack, struct Date start, struct Date end, 
 
     printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date");
 
-    int curr_order;
+    char NA[2] = "NA";
+    char curr_order_id[100];
+    char curr_name[100];
+    int synchronized_index;
+    char order_due_str[10];
     char* datelist[];
     int startday, endday, totaldays;
 
@@ -119,23 +123,49 @@ void OutputModule(struct Order resultstack, struct Date start, struct Date end, 
     totaldays = startday - endday + 1; // +1 to include last day
 
     datelist = filldatelist(start, end, totaldays);
-  
-    // print & iterate datelist through each line for Date
-    // print & iterate name through each line for Product_Name
-    // print & iterate order_id_by_date through each line for Order_Number
-    // print & iterate production_by_date through each line for Quantity(Produced)
-    // print & iterate order_due through each line for Due_Date
+
 
     for (int i = 0; i < totaldays; i++){
-        printf("%s ", datelist[i]);
 
+        strcpy(curr_order_id, resultstack.order_id_by_date[i]); // GET curr_order_id
+
+        if ( strcmp(curr_order_id, NA) == 0 ){
+            curr_name = "NA";
+            order_due_str = "NA";
+        }
+        else {
+            // GET synchronized_index
+            for(int j = 0; j < 100; j++){
+                if( strcmp(curr_order_id, resultstack.order_id[j]) == 0 ) {
+                    synchronized_index = j;
+                    break;
+                }
+            }
+
+            // GET curr_name
+            strcpy(curr_name, resultstack.name[synchronized_index]);
+
+            // convert Date resultstack.order_due[synchronized_index] to String order_due_str
+            sprintf(order_due_str,"%d-%d-%d", resultstack.order_due[synchronized_index].year, resultstack.order_due[synchronized_index].month, resultstack.order_due[synchronized_index].day);
+        }
+        // print & iterate datelist through each line for Date
+        // print & iterate name through each line for Product_Name
+        // print & iterate order_id_by_date through each line for Order_Number
+        // print & iterate production_by_date through each line for Quantity(Produced)
+        // print & iterate order_due through each line for Due_Date
+
+        printf("%s %s %s %s %s", datelist[i], curr_name, resultstack.order_id_by_date[i], resultstack.production_by_date[i], order_due_str);
+
+        
     }
   
 
 }
 
 int main(){
-    // assume max number of days is 100
+    // assume MAX_NUMBER_OF_DAYS = 100
+    // assume MAX_NUMBER_OF_ORDERS = 100
+    // ORDER_ID_LENGTH = 100
     // get resultstack from part 2
     struct Order resultstack;
     struct Date start[20];
