@@ -71,13 +71,28 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 	struct Date endorder;
 	char plant;*/
 
-	
+	//construct struct note that it is all shallow copies---------
+
+	resultx.startorder = orderstack.startorder;
+	resulty.startorder = orderstack.startorder;
+	resultz.startorder = orderstack.startorder;
+	resultx.endorder = orderstack.endorder;
+	resulty.endorder = orderstack.endorder;
+	resultz.endorder = orderstack.endorder;
+
+	resultx.plant = "X";
+	resulty.plant = "Y";
+	resultz.plant = "Z";
+
+	//------------------------------------------------------------
+
 
 	int plant_x = 300;
 	int plant_y = 400;
 	int plant_z = 500;
 
 	//plant production queue
+
 	int prodx=0;
 	int prody=0;
 	int prodz=0;
@@ -101,6 +116,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 			prodx = orderstack.quantity[curr];
 			xiter++;
+			curr++;
 		}
 		if (prody == 0)
 		{
@@ -112,6 +128,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 			prody = orderstack.quantity[curr];
 			yiter++;
+			curr++;
 		}
 		if (prodz == 0)
 		{
@@ -123,11 +140,33 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 			prodz = orderstack.quantity[curr];
 			ziter++;
+			curr++;
 		}
 
 		//process values
 
 
+		char process_by_date[100][100];
+		int production_by_date[100];
+
+
+		strcpy(resultx.process_by_date[currday],resultx.order_id[xiter]);
+		strcpy(resulty.process_by_date[currday], resulty.order_id[yiter]);
+		strcpy(resultz.process_by_date[currday], resultz.order_id[ziter]);
+
+		resultx.production_by_date[currday] = prodx;
+		resulty.production_by_date[currday] = prody;
+		resultz.production_by_date[currday] = prodz;
+
+		if (prodx < 300) {
+			resultx.production_by_date[currday] = prodx;
+		}
+		if (prody < 400) {
+			resulty.production_by_date[currday] = prody;
+		}
+		if (prodz < 500) {
+			resultz.production_by_date[currday] = prodz;
+		}
 
 
 		prodx = prodx - 300;
