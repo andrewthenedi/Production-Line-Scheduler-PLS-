@@ -7,10 +7,25 @@
 // testing
 // testing github againn
 
+struct Date{ 
+    int day; 
+    int year; 
+    int month;
+};
+
+struct Order{
+    char *order_id;
+    char *name; 
+    struct Date order_due; 
+    int quantity;
+};
+
 /*
 Plant x = 300 per day
 Plant y = 400 per day
 Plant z = 500 per day
+
+==== What do I need 
 */
 int main(){
     int datetoday(int y, int m, int d);
@@ -21,6 +36,9 @@ int main(){
     int date2[3];
     
     printf("\nAlgorithm used: %s\n", alg);
+
+    /* 
+    ---------- This part is not needed anymore since the date is already parsed -------------- 
     char test[] = "2020-05-06"; // change the date to the date input 
     char test2[] = "2020-05-10";
     char *temp; 
@@ -42,6 +60,9 @@ int main(){
         date2[n++] = atoi(ptr2);
         ptr2 = strtok(NULL, "-");
     }
+
+    */
+
     // put the above code to a for loop
     // int valid[][] //not sure how many spaces needed, for the valid processes
     // order is valid if the number of day x plant capability <= order amt 
@@ -54,5 +75,5 @@ int main(){
 int datetoday(int y, int m, int d){
     m = (m + 9) % 12; 
     y = y - m/10; 
-    return 365*y + y/4 - y/100 + y/400 + (m*306 + 5)/10 + ( d - 1 ); 
+    return 365*y + y/4 - y/100 + y/400 + (m*306 + 5)/10 + ( d - 1 );
 }
