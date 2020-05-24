@@ -18,14 +18,14 @@ struct Date { //YYYY-MM-DD
 };
 
 struct Order {
-        char order_id[100][100];
+    char order_id[100][100];
 	char name[100][100];
 	struct Date order_due[100];
 	int quantity[100];
-        // order_id, name, order_due and quantity has synchronized indexes.
-	char process_by_date[100][100];
+    // order_id, name, order_due and quantity has synchronized indexes.
+	char order_id_by_date[100][100];
 	int production_by_date[100];
-	// each element in process_by_date and production_by_date corresponds to one day
+    // each element in order_id_by_date and production_by_date corresponds to one day
   	struct Date startorder;
 	struct Date endorder;
 	char plant;
@@ -45,17 +45,13 @@ int getplantvalue(char plant){
     else if (plant == 'Z') return 500;
 }
 
-char* filldatelist(struct Date start, struct Date end) {
+char* filldatelist(struct Date start, struct Date end, int totaldays) {
     int y = start.year;
     int m = start.month;
     int d = start.day;
     char date[10] = "";
     char datelist[100][10]; // ex: 2020-01-01 is 10 chars, max amount of days in addPERIOD is assumed to be 100
-    int startday, endday, totaldays;
 
-    startday = datetoday(start.year, start.month, start.day);
-    endday = datetoday(end.year, end.month, end.day);
-    totaldays = startday - endday + 1; // +1 to include last day
 
 
     for(int i = 0; i < totaldays; i++){ // iterate day, update year & month
@@ -116,14 +112,24 @@ void OutputModule(struct Order resultstack, struct Date start, struct Date end, 
 
     int curr_order;
     char* datelist[];
+    int startday, endday, totaldays;
 
-    datelist = filldatelist(start, end);
+    startday = datetoday(start.year, start.month, start.day);
+    endday = datetoday(end.year, end.month, end.day);
+    totaldays = startday - endday + 1; // +1 to include last day
+
+    datelist = filldatelist(start, end, totaldays);
   
     // print & iterate datelist through each line for Date
     // print & iterate name through each line for Product_Name
-    // print & iterate process_by_date through each line for Order_Number
+    // print & iterate order_id_by_date through each line for Order_Number
     // print & iterate production_by_date through each line for Quantity(Produced)
     // print & iterate order_due through each line for Due_Date
+
+    for (int i = 0; i < totaldays; i++){
+        printf("%s ", datelist[i]);
+
+    }
   
 
 }
@@ -140,4 +146,3 @@ int main(){
 
 
 }
-
