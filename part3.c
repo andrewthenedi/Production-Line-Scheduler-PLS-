@@ -18,13 +18,15 @@ struct Date { //YYYY-MM-DD
 };
 
 struct Order {
-    char order_id[100][100];
-	char name[100][100];
-	struct Date order_due[100];
-	int quantity[100];
+    int MAX_NUMBER_OF_DAYS = 100;
+    int MAX_NUMBER_OF_ORDERS = 100;
+    char order_id[MAX_NUMBER_OF_ORDERS][100];
+	char name[MAX_NUMBER_OF_ORDERS][100];
+	struct Date order_due[MAX_NUMBER_OF_ORDERS];
+	int quantity[MAX_NUMBER_OF_ORDERS];
     // order_id, name, order_due and quantity has synchronized indexes.
-	char order_id_by_date[100][100];
-	int production_by_date[100];
+	char order_id_by_date[MAX_NUMBER_OF_DAYS][100];
+	int production_by_date[MAX_NUMBER_OF_DAYS];
     // each element in order_id_by_date and production_by_date corresponds to one day
   	struct Date startorder;
 	struct Date endorder;
@@ -103,7 +105,7 @@ int getplantvalue(char plant){
 
 // }
 
-void OutputModule(struct Order resultstack, int length, char* alg){
+void OutputModule(struct Order resultstack, char* alg){
 
     char NA[2] = "NA";
     char curr_order_id[100];
@@ -229,7 +231,7 @@ int main(){
     int length;
     char alg[10]; // name of alg as String
 
-    OutputModule(resultstack, length, alg);
+    OutputModule(resultstack, alg);
 
 
 }
