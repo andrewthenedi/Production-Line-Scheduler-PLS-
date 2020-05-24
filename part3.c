@@ -18,15 +18,14 @@ struct Date { //YYYY-MM-DD
 };
 
 struct Order {
-    int MAX_NUMBER_OF_DAYS = 100;
-    int MAX_NUMBER_OF_ORDERS = 100;
-    char order_id[MAX_NUMBER_OF_ORDERS][100];
-	char name[MAX_NUMBER_OF_ORDERS][100];
-	struct Date order_due[MAX_NUMBER_OF_ORDERS];
-	int quantity[MAX_NUMBER_OF_ORDERS];
+
+    char order_id[100][100];
+	char name[100][100];
+	struct Date order_due[100];
+	int quantity[100];
     // order_id, name, order_due and quantity has synchronized indexes.
-	char order_id_by_date[MAX_NUMBER_OF_DAYS][100];
-	int production_by_date[MAX_NUMBER_OF_DAYS];
+	char order_id_by_date[100][100];
+	int production_by_date[100];
     // each element in order_id_by_date and production_by_date corresponds to one day
   	struct Date startorder;
 	struct Date endorder;
@@ -132,7 +131,8 @@ void OutputModule(struct Order resultstack, char* alg){
 
     startday = datetoday(resultstack.startorder.year, resultstack.startorder.month, resultstack.startorder.day);
     endday = datetoday(resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
-    totaldays = startday - endday + 1; // +1 to include last day
+    totaldays = endday - startday + 1; // +1 to include last day
+    //printf("totaldays is %d \n", totaldays);
 
     // fill datelist with datelist_element
     for(int i = 0; i < totaldays; i++){ // iterate day, update year & month
@@ -231,6 +231,26 @@ int main(){
     int length;
     char alg[10]; // name of alg as String
 
+    // dummy values 
+    resultstack.startorder.year = 2020;
+    resultstack.startorder.month = 5;
+    resultstack.startorder.day = 24;
+    resultstack.endorder.year = 2020;
+    resultstack.endorder.month = 5;
+    resultstack.endorder.day = 30;
+
+    char order_id_dummy[10] = "P0001";
+    strcpy(resultstack.order_id[0], order_id_dummy);
+    char name_dummy[100] = "Product_A";
+    strcpy(resultstack.name[0], name_dummy);
+    resultstack.order_due[0].year = 2020;
+    resultstack.order_due[0].month = 5;
+    resultstack.order_due[0].day = 25;
+    strcpy(resultstack.order_id_by_date[0], order_id_dummy);
+    resultstack.production_by_date[0] = 300;
+    resultstack.plant = 'X';
+
+    
     OutputModule(resultstack, alg);
 
 
