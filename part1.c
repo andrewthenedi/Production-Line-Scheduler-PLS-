@@ -160,15 +160,23 @@ int main()
 {
     struct Date 
     {
-        int day[100];
-        int mon[100];
-        int year[100];
+        int day;
+        int mon;
+        int year;
     };
     struct Order
     {
-        char orderID[100][100];
-        char productName[100][100]; 
+        char order_id[100][100];
+        char name[100][100];
+        struct Date order_due[100];
         int quantity[100];
+        // order_id, name, order_due and quantity has synchronized indexes.
+        char order_id_by_date[100][100];
+        int production_by_date[100];
+        // each element in order_id_by_date and production_by_date corresponds to one day
+        struct Date startorder;
+        struct Date endorder;
+        char plant;
     };
 
     // buffers
@@ -195,7 +203,7 @@ int main()
     struct Date start[20];
     struct Date end[20];
     struct Date due[20];
-    struct Order input[20];
+    struct Order input;
 
     printf("~~WELCOME TO PLS~~\n");
     while (status == 0)
@@ -240,7 +248,7 @@ int main()
         printf("%s\n", req);
         if (strcmp(req, "addPERIOD") == 0)
         {
-
+            
             char tempdate[30];
             /*Split again*/
             for(int k = end1; k < strlen(from); k++){
@@ -255,7 +263,7 @@ int main()
             }
             
             char date1[15];
-            printf("%s\n", tempdate);
+            
             int from2, end2; 
             /* split the - in the date */
              for(int k = 0; k < strlen(tempdate); k++){ 
@@ -267,8 +275,8 @@ int main()
                     break;
                 }
             }
-            start->year[0] = atoi(date1);
-            printf("check2 %d\n", start->year[0]);
+            input.startorder.year = atoi(date1);
+            
 
             memset(date1, 0, 30);
 
@@ -281,8 +289,8 @@ int main()
                     break;
                 }
             }
-            printf("check %s\n", date1);
-            start->mon[0] = atoi(date1);
+            
+            input.startorder.mon = atoi(date1);
 
             memset(date1, 0, 30);
 
@@ -295,8 +303,8 @@ int main()
                     break;
                 }
             }
-            printf("check %s\n", date1);
-            start->day[0] = atoi(date1);
+            
+            input.startorder.day = atoi(date1);
 
             /* DATE 1 IS DONE */ 
 
@@ -314,7 +322,7 @@ int main()
                 }
             }
             
-            printf("%s\n", tempdate);
+            
             from2 = end2 = 0;
             // int from2, end2; 
             /* split the - in the date */
@@ -327,8 +335,22 @@ int main()
                     break;
                 }
             }
-            end->year[0] = atoi(date1);
-            printf("check2 %d\n", start->year[0]);
+            input.endorder.year = atoi(date1);
+            // printf("check2 %d\n", start->year[0]);
+
+            memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    getsubstring(tempdate, date1, from2, end2);
+                    break;
+                }
+            }
+            // printf("check %s\n", date1);
+            input.endorder.mon = atoi(date1);
 
             memset(date1, 0, 30);
 
@@ -342,26 +364,12 @@ int main()
                 }
             }
             printf("check %s\n", date1);
-            end->mon[0] = atoi(date1);
-
-            memset(date1, 0, 30);
-
-            for(int k = end2; k < strlen(tempdate); k++){ 
-                if(tempdate[k] != '-'){
-                    from2 = k; 
-                    end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
-                    break;
-                }
-            }
-            printf("check %s\n", date1);
-            end->day[0] = atoi(date1);
+            input.endorder.day = atoi(date1);
         }
         else if (strcmp(req, "addORDER") == 0)
         {
             printf("this is addORDER\n");
-
+            printf("request is %s\n", from);
             char tempdate[30];
             memset(tempdate, 0, 30);
             /*Split again*/
@@ -377,9 +385,9 @@ int main()
             }
 
             // printf("ez %s\n", tempdate);
-            strcpy(input->orderID[i], tempdate);
+            strcpy(input.order_id[i], tempdate);
             // input->orderID[i] = tempdate; 
-            printf("%s\n", input->orderID[i]);
+            // printf("%s\n", input->orderID[i]);
             memset(tempdate, 0, 30);
 
             // the date 
@@ -407,7 +415,7 @@ int main()
                     break;
                 }
             }
-            due->year[i] = atoi(date1);
+            input.order_due[i].year = atoi(date1);
             // printf("check2 %d\n", start->year[0]);
 
             memset(date1, 0, 30);
@@ -422,7 +430,7 @@ int main()
                 }
             }
             // printf("check %s\n", date1);
-            due->mon[i] = atoi(date1);
+            input.order_due[i].mon = atoi(date1);
             memset(date1, 0, 30);
 
             for(int k = end2; k < strlen(tempdate); k++){ 
@@ -435,7 +443,7 @@ int main()
                 }
             }
             // printf("check %s\n", date1);
-            due->day[i] = atoi(date1);
+            input.order_due[i].day = atoi(date1);
 
             memset(tempdate, 0, 30);
 
@@ -451,11 +459,11 @@ int main()
             }
 
             // printf("ez %s\n", tempdate);
-            input->quantity[i] = atoi(tempdate);
+            input.quantity[i] = atoi(tempdate);
 
 
             memset(tempdate, 0, 30);
-
+            // printf("end1 is in = %d\n", end1);
             for(int k = end1; k < strlen(from); k++){
                 
                 if(from[k] != ' '){
@@ -467,9 +475,9 @@ int main()
                 }
             }
 
-            printf("ez %s\n", tempdate);
+            printf("name is %s\n", tempdate);
             // input->productName[i] = tempdate;
-            strcpy(input->productName[i], tempdate);
+            strcpy(input.name[i], tempdate);
             i++;
             // split the date
 
@@ -528,16 +536,13 @@ int main()
             strcpy(alg[i], tempalg);
             printf("this is runPLS\n");
             for(int n = 0; n < i; n++){
-                printf("%s\n", input->orderID[n]);
-                printf("%s", input->productName[n]);
-                printf("%d\n", input->quantity[n]);
-                printf("%d %d %d\n", due->year[n], due->mon[n], due->day[n]);
+                printf("Order id is %s\n", input.order_id[n]);
+                printf("Product name is %s\n", input.name[n]);
+                printf("Quantity is %d\n", input.quantity[n]);
+                printf("Year is %d %d %d\n", input.order_due[n].year, input.order_due[n].mon, input.order_due[n].day);
             }
-            printf("%d %d %d\n", start->year[0], start->mon[0], start->day[0]);
-            printf("%d %d %d\n", end->year[0], end->mon[0], end->day[0]);
-            // char * alg = token;
-            // token = strtok(NULL, blank);
-            // printf("%s\n", input->orderID[0]);
+            printf("%d %d %d\n", input.startorder.year, input.startorder.mon, input.startorder.day);
+            printf("%d %d %d\n", input.endorder.year, input.endorder.mon, input.endorder.day);
 
             // Schedule(input, start, end, due, alg, i);    dal's function
         }
@@ -562,15 +567,24 @@ int main()
             
             rewind(fd);
 
-            for(int k = 0; k < batch_n && k < 100; k++){
-
+            for(int k = 0; k < batch_n; k++){
+                memset(s, 0, 100);
                 fgets(s, 100, fd);
                 int len = strlen(s);
-                // if(len > 0 && s[len-1] == '\n') s[len-1] = 0;
+                
                 strcpy(batch[k], s);
-                printf("%s check\n", s);
+                batch[k][len] = 0;
+                printf("copied string %s\n The array string %s\n", s, batch[k]);
+                for(int t = 0; t <= k; t++){
+                    printf("array %s\n", batch[t]);
+                }
+                
+                
             }
 
+            for(int k = 0; k < batch_n; k++){
+                printf("k = %d, %s\n", k, batch[k]);
+            }
             isbatch = 1;
 
             // printf("%s test\n", tempdate);
