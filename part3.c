@@ -103,10 +103,10 @@ char* filldatelist(struct Date start, struct Date end, int totaldays) {
 
 }
 
-void OutputModule(struct Order resultstack, struct Date start, struct Date end, int length, char* alg){
+void OutputModule(struct Order resultstack, int length, char* alg){
     printf("Plant_%c (%d per day) \n", resultstack.plant, getplantvalue(resultstack.plant) );
 
-    printf("%s to %s \n", start, end);
+    printf("%s to %s \n", resultstack.startorder, resultstack.endorder);
 
     printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date \n");
 
@@ -118,11 +118,11 @@ void OutputModule(struct Order resultstack, struct Date start, struct Date end, 
     char* datelist[];
     int startday, endday, totaldays;
 
-    startday = datetoday(start.year, start.month, start.day);
-    endday = datetoday(end.year, end.month, end.day);
+    startday = datetoday(resultstack.startorder.year, resultstack.startorder.month, resultstack.startorder.day);
+    endday = datetoday(resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
     totaldays = startday - endday + 1; // +1 to include last day
 
-    datelist = filldatelist(start, end, totaldays);
+    datelist = filldatelist(resultstack.startorder, resultstack.endorder, totaldays);
 
 
     for (int i = 0; i < totaldays; i++){
@@ -171,8 +171,9 @@ int main(){
     struct Date start[20];
     struct Date end[20];
     int length;
+    char alg[10]; // name of alg as String
 
-    OutputModule(resultstack, start, end, length);
+    OutputModule(resultstack, length, alg);
 
 
 }
