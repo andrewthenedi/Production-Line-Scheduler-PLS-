@@ -25,6 +25,7 @@ struct Order {
         // order_id, name, order_due and quantity has synchronized indexes.
 	char process_by_date[100][100];
 	int production_by_date[100];
+	// each element in process_by_date and production_by_date corresponds to one day
   	struct Date startorder;
 	struct Date endorder;
 	char plant;
