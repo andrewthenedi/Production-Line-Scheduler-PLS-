@@ -108,7 +108,7 @@ void OutputModule(struct Order resultstack, struct Date start, struct Date end, 
 
     printf("%s to %s \n", start, end);
 
-    printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date");
+    printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date \n");
 
     char NA[2] = "NA";
     char curr_order_id[100];
@@ -154,7 +154,7 @@ void OutputModule(struct Order resultstack, struct Date start, struct Date end, 
         // print & iterate production_by_date through each line for Quantity(Produced)
         // print & iterate order_due through each line for Due_Date
 
-        printf("%s %s %s %s %s", datelist[i], curr_name, resultstack.order_id_by_date[i], resultstack.production_by_date[i], order_due_str);
+        printf("%s %s %s %s %s \n", datelist[i], curr_name, resultstack.order_id_by_date[i], resultstack.production_by_date[i], order_due_str);
 
         
     }
