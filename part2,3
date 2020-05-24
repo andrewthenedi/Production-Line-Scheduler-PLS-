@@ -54,7 +54,7 @@ void dateinput(struct Date date, int y, int m, int d)
 
 void OutputModule(struct Order resultstack, char* alg) {
 
-	char NA[2] = "NA";
+	char *NA = "NA";
 	char curr_order_id[100];
 	char curr_name[100];
 	int synchronized_index;
