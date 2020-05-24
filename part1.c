@@ -177,6 +177,7 @@ int main()
     char * startDate[100];
     char * endDate[100];
     char * dueDate[100];
+    char alg[100][100]; 
 
     // status codes    
     int i = 0, status, n, j = 0;
@@ -308,7 +309,7 @@ int main()
                     break;
                 }
             }
-            start->year[0] = atoi(date1);
+            end->year[0] = atoi(date1);
             printf("check2 %d\n", start->year[0]);
 
             memset(date1, 0, 30);
@@ -323,7 +324,7 @@ int main()
                 }
             }
             printf("check %s\n", date1);
-            start->mon[0] = atoi(date1);
+            end->mon[0] = atoi(date1);
 
             memset(date1, 0, 30);
 
@@ -337,8 +338,7 @@ int main()
                 }
             }
             printf("check %s\n", date1);
-            start->day[0] = atoi(date1);
-            
+            end->day[0] = atoi(date1);
         }
         else if (strcmp(req, "addORDER") == 0)
         {
@@ -492,13 +492,31 @@ int main()
         }
         else if (strcmp(req, "runPLS") == 0)
         {
+            char tempalg[30];
+            memset(tempalg, 0, 30);
+            /*Split again*/
+            for(int k = end1; k < strlen(from); k++){
+                
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempalg, from1, end1);
+                    break;
+                }
+            }
+            printf("ez %s\n", tempalg);
+            // input->productName[i] = tempdate;
+            strcpy(alg[i], tempalg);
             printf("this is runPLS\n");
             for(int n = 0; n < i; n++){
                 printf("%s\n", input->orderID[n]);
-                printf("%s\n", input->productName[n]);
+                printf("%s", input->productName[n]);
                 printf("%d\n", input->quantity[n]);
                 printf("%d %d %d\n", due->year[n], due->mon[n], due->day[n]);
             }
+            printf("%d %d %d\n", start->year[0], start->mon[0], start->day[0]);
+            printf("%d %d %d\n", end->year[0], end->mon[0], end->day[0]);
             // char * alg = token;
             // token = strtok(NULL, blank);
             // printf("%s\n", input->orderID[0]);
