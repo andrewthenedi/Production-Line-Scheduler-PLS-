@@ -45,19 +45,98 @@ int getplantvalue(char plant){
     else if (plant == 'Z') return 500;
 }
 
-char* filldatelist(struct Date start, struct Date end, int totaldays) {
-    int y = start.year;
-    int m = start.month;
-    int d = start.day;
-    char date[10] = "";
-    char datelist[100][10]; // ex: 2020-01-01 is 10 chars, max amount of days in addPERIOD is assumed to be 100
+// char* filldatelist(struct Date start, struct Date end, int totaldays) {
+//     int y = start.year;
+//     int m = start.month;
+//     int d = start.day;
+//     char date[10] = "";
+//     char datelist[100][10]; // ex: 2020-01-01 is 10 chars, max amount of days in addPERIOD is assumed to be 100
 
 
 
+//     for(int i = 0; i < totaldays; i++){ // iterate day, update year & month
+//         sprintf(date, "%d-%d-%d", y, m, d);
+
+//         strcpy(datelist[i], date);
+        
+//         d++;
+
+//         if(d > 31){
+//             if((m == 1) || (m == 3) || (m == 5) || (m == 7) || (m == 8) || (m == 10) || (m == 12)){
+//                 m++;
+//                 d = 1;
+//                 if (m > 12){ // new year
+//                     y++;
+//                     m = 1;
+//                 }
+//             }
+//         }
+
+//         if(d > 30) {
+//             if((m == 4) || (m == 6) || (m== 9) || (m == 11)){
+//                 m++;
+//                 d = 1;
+//             }
+//         }
+
+//         if((y%4 == 0) && (y%400 == 0) && (y%100 == 0)){ // y is a leap year (mod is 0 when divided by 4 AND 400 AND 100)
+//             if ((d > 29) && (m == 2)) { // feb 30 @ leap year
+//                 m++;
+//                 d = 1;
+//             }
+//         }
+
+//         else if ((y%4 == 0) && (y%100 != 0) && (y%400 != 0)){ // y is a leap year (mod is 0 when divided by 4 AND (NOT 400) AND (NOT 100))
+//             if ((d > 29) && (m == 2)) { // feb 30 @ leap year
+//                 m++;
+//                 d = 1;
+//             }
+//         }
+        
+//         else { // y is not a leap year
+//             if ((d > 28) && (m == 2)) { // feb 29 @ non-leap year
+//                 m++;
+//                 d = 1;
+//             }
+//         }
+//     }
+
+// }
+
+void OutputModule(struct Order resultstack, int length, char* alg){
+
+    char NA[2] = "NA";
+    char curr_order_id[100];
+    char curr_name[100];
+    int synchronized_index;
+    char order_due_str[10];
+    char datelist[100][10]; // MAX_NUMBER_OF_DAYS = 100
+    char datelist_element[10];
+    int startday, endday, totaldays;
+    char startdate[10];
+    char enddate[10];
+    int y = resultstack.startorder.year;
+    int m = resultstack.startorder.month;
+    int d = resultstack.startorder.day;
+
+
+    sprintf(startdate, "%d-%d-%d", resultstack.startorder.year, resultstack.startorder.month, resultstack.startorder.day);
+    sprintf(enddate, "%d-%d-%d", resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
+
+    printf("Plant_%c (%d per day) \n", resultstack.plant, getplantvalue(resultstack.plant) );
+    printf("%s to %s \n", startdate, enddate);
+
+    printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date \n");
+
+    startday = datetoday(resultstack.startorder.year, resultstack.startorder.month, resultstack.startorder.day);
+    endday = datetoday(resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
+    totaldays = startday - endday + 1; // +1 to include last day
+
+    // fill datelist with datelist_element
     for(int i = 0; i < totaldays; i++){ // iterate day, update year & month
-        sprintf(date, "%d-%d-%d", y, m, d);
+        sprintf(datelist_element, "%d-%d-%d", y, m, d);
 
-        strcpy(datelist[i], date);
+        strcpy(datelist[i], datelist_element);
         
         d++;
 
@@ -101,37 +180,14 @@ char* filldatelist(struct Date start, struct Date end, int totaldays) {
         }
     }
 
-}
-
-void OutputModule(struct Order resultstack, int length, char* alg){
-    printf("Plant_%c (%d per day) \n", resultstack.plant, getplantvalue(resultstack.plant) );
-
-    printf("%s to %s \n", resultstack.startorder, resultstack.endorder);
-
-    printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date \n");
-
-    char NA[2] = "NA";
-    char curr_order_id[100];
-    char curr_name[100];
-    int synchronized_index;
-    char order_due_str[10];
-    char* datelist[];
-    int startday, endday, totaldays;
-
-    startday = datetoday(resultstack.startorder.year, resultstack.startorder.month, resultstack.startorder.day);
-    endday = datetoday(resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
-    totaldays = startday - endday + 1; // +1 to include last day
-
-    datelist = filldatelist(resultstack.startorder, resultstack.endorder, totaldays);
-
 
     for (int i = 0; i < totaldays; i++){
 
         strcpy(curr_order_id, resultstack.order_id_by_date[i]); // GET curr_order_id
 
         if ( strcmp(curr_order_id, NA) == 0 ){
-            curr_name = "NA";
-            order_due_str = "NA";
+            strcpy(curr_name, NA);
+            strcpy(order_due_str, NA);
         }
         else {
             // GET synchronized_index
@@ -154,7 +210,7 @@ void OutputModule(struct Order resultstack, int length, char* alg){
         // print & iterate production_by_date through each line for Quantity(Produced)
         // print & iterate order_due through each line for Due_Date
 
-        printf("%s %s %s %s %s \n", datelist[i], curr_name, resultstack.order_id_by_date[i], resultstack.production_by_date[i], order_due_str);
+        printf("%s %s %s %d %s \n", datelist[i], curr_name, resultstack.order_id_by_date[i], resultstack.production_by_date[i], order_due_str);
 
         
     }
