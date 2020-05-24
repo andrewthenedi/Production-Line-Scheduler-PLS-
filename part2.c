@@ -59,11 +59,14 @@ int datecompare(struct Date date1, struct Date date2) // Compares to date
 void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length)
 {
 
-	
+    printf("start %d %d %d", orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
+    printf(", end %d %d %d\n", orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
 	int startint = datetoday(orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
 	int endint = datetoday(orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
-	int currday = startint;
-	printf("reached here");
+    printf("date start %d, date end %d\n", startint, endint);
+	int currday = 0;
+    int endday = endint - startint;
+	printf("reached here\n");
 	/*
 	char order_id[100][100];
 	char name[100][100];
@@ -113,7 +116,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 	int curr = 0;
 
-	while (currday != endint)
+	while (currday <= endday)
 	{
 		//assign production to factories x to y to z
 
@@ -122,11 +125,12 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			if (curr < length)
 			{
 				//initialize starting values 
+                printf("Check\n");
 				strcpy(resultx.order_id[xiter], orderstack.order_id[curr]);
 				strcpy(resultx.name[xiter], orderstack.name[curr]);
 				resultx.order_due[xiter] = orderstack.order_due[curr];		//shallow copy
 				resultx.quantity[xiter] = orderstack.quantity[curr];
-
+                printf("Order for plant x %s\n", resultx.name[xiter]);
 				prodx = orderstack.quantity[curr];
 				xiter++;
 				curr++;
@@ -134,6 +138,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			else
 			{
 				endprodx = 1;
+                printf("x is ending\n");
 			}
 		}
 		if (prody == 0)
@@ -153,6 +158,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			else
 			{
 				endprody = 1;
+                printf("y is ending\n");
 			}
 		}
 		if (prodz == 0)
@@ -172,6 +178,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			else
 			{
 				endprodz = 1;
+                printf("z is ending\n");
 			}
 		}
 
@@ -179,17 +186,23 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 		//process values
 
 		if (endprodx == 0)
-		{
-			strcpy(resultx.process_by_date[currday], resultx.order_id[xiter]);
+		{   
+            
+			strcpy(resultx.process_by_date[currday], resultx.order_id[xiter-1]);
+            printf("testing\n");
 			resultx.production_by_date[currday] = 300;
-
+            printf("Plant X is doing order %s\n", resultx.process_by_date[currday]);
 			if (prodx < 300)
 			{
 				resultx.production_by_date[currday] = prodx;
 			}
 
 			prodx = prodx - 300;
-		}
+            if(prodx < 0){
+                printf("x is reset\n");
+                prodx = 0;
+            }
+        }
 		else
 		{
 			resultx.production_by_date[currday] = 0;
@@ -199,8 +212,9 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 		if (endprody == 0)
 		{
-			strcpy(resulty.process_by_date[currday], resulty.order_id[yiter]);
+			strcpy(resulty.process_by_date[currday], resulty.order_id[yiter-1]);
 			resulty.production_by_date[currday] = 400;
+            printf("Plant Y is doing order %s\n", resulty.process_by_date[currday]);
 
 			if (prody < 400)
 			{
@@ -208,6 +222,10 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			}
 
 			prody = prody - 400;
+            if(prody < 0){ 
+                printf("y is reset\n");
+                prody = 0;
+            }
 		}
 		else
 		{
@@ -218,8 +236,9 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 		if (endprodz == 0)
 		{
-			strcpy(resultz.process_by_date[currday], resultz.order_id[ziter]);
+			strcpy(resultz.process_by_date[currday], resultz.order_id[ziter-1]);
 			resultz.production_by_date[currday] = 500;
+            printf("Plant Z is doing order %s\n", resultz.process_by_date[currday]);
 
 			if (prodz < 500)
 			{
@@ -227,6 +246,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			}
 
 			prodz = prodz - 500;
+            if(prodz < 0) prodz = 0;
 		}
 		else
 		{
@@ -239,10 +259,13 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 		
 
 	}
-	for (int i = 0; i < 200; i++)
+    printf("checkcheck\n");
+	for (int i = 0; i < endday; i++)
 	{
-		printf("`");
-		printf("%d", resulty.production_by_date[i]);
+		// printf("`");
+        printf("day %d, Plant X is doing %d, the product is %s\n", i+1, resultx.production_by_date[i], resultx.process_by_date[i]);
+		printf("day %d, Plant Y is doing %d, the product is %s\n", i+1, resulty.production_by_date[i], resulty.process_by_date[i]);
+        printf("day %d, Plant Z is doing %d, the product is %s\n", i+1, resultz.production_by_date[i], resultz.process_by_date[i]);
 	}
 }
 
@@ -269,22 +292,45 @@ int main() {
 	strcpy(input.order_id[2], "P003");
 	strcpy(input.order_id[3], "P004");
 	strcpy(input.name[0], "Product_A");
-	strcpy(input.name[1], "Product_A");
-	strcpy(input.name[2], "Product_A");
-	strcpy(input.name[3], "Product_A");
+	strcpy(input.name[1], "Product_B");
+	strcpy(input.name[2], "Product_C");
+	strcpy(input.name[3], "Product_D");
 
-	dateinput(input.order_due[0], 2020, 4, 20);
-	dateinput(input.order_due[1], 2020, 4, 21);
-	dateinput(input.order_due[2], 2020, 4, 22);
-	dateinput(input.order_due[3], 2020, 4, 23);
+	// dateinput(input.order_due[0], 2020, 4, 20);
+    input.order_due[0].year = 2020;  
+    input.order_due[0].month = 4; 
+    input.order_due[0].day = 21; 
+
+    input.order_due[1].year = 2020;  
+    input.order_due[1].month = 4; 
+    input.order_due[1].day = 22;
+
+    input.order_due[2].year = 2020;  
+    input.order_due[2].month = 4; 
+    input.order_due[2].day = 23;
+
+    input.order_due[3].year = 2020;  
+    input.order_due[3].month = 4; 
+    input.order_due[3].day = 24;
+
+	// dateinput(input.order_due[1], 2020, 4, 21);
+	// dateinput(input.order_due[2], 2020, 4, 22);
+	// dateinput(input.order_due[3], 2020, 4, 23);
 
 	input.quantity[0] = 800;
 	input.quantity[1] = 600;
 	input.quantity[2] = 1200;
 	input.quantity[3] = 400;
 
-	dateinput(input.startorder, 2020, 3, 20);
-	dateinput(input.endorder, 2020, 5, 20);
+	// dateinput(input.startorder, 2020, 3, 20);
+    input.startorder.year = 2020; 
+    input.startorder.month = 3; 
+    input.startorder.day = 20;
+
+    input.endorder.year = 2020;
+    input.endorder.month = 3;
+    input.endorder.day = 28;
+	// dateinput(input.endorder, 2020, 5, 20);
 
 	//
 
@@ -296,10 +342,10 @@ int main() {
 	struct Order resultz;
 
 	//struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length
-	inputlength = 2;
+	inputlength = 4;
 	if ((strcmp(alg, "FCFS") == 0) || (strcmp(alg, "SJF") == 0))
 	{
-		printf("here");
+		printf("here\n");
 
 		FCFS(input, resultx, resulty, resultz, inputlength);
 
