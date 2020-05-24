@@ -59,10 +59,11 @@ int datecompare(struct Date date1, struct Date date2) // Compares to date
 void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length)
 {
 
-
+	
 	int startint = datetoday(orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
 	int endint = datetoday(orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
 	int currday = startint;
+	printf("reached here");
 	/*
 	char order_id[100][100];
 	char name[100][100];
@@ -238,15 +239,13 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 		
 
 	}
-}
-void SJF(struct Order orderstack, struct Date start, struct Date end, int plantprod, int length)
-{
-	for (int i = 0; i < length; i++)
+	for (int i = 0; i < 200; i++)
 	{
-
+		printf("`");
+		printf("%d", resulty.production_by_date[i]);
 	}
-
 }
+
 
 
 int main() {
@@ -256,7 +255,6 @@ int main() {
 	int plant_z = 500;
 
 	//-----------------------GET INFO FROM PART 1--------------------------
-	printf("flag1");
 	struct Order input;
 	int inputlength;
 	struct Date end;
@@ -266,19 +264,6 @@ int main() {
 	//--------------------------------------------------------------------
 	//dummy data
 
-	/*
-	char order_id[100][100];
-	char name[100][100];
-	struct Date order_due[100];
-	int quantity[100];
-
-	char process_by_date[100][100];
-	int production_by_date[100];
-
-	struct Date startorder;
-	struct Date endorder;
-	char plant;*/
-	printf("flag1");
 	strcpy(input.order_id[0], "P001");
 	strcpy(input.order_id[1], "P002");
 	strcpy(input.order_id[2], "P003");
@@ -287,7 +272,6 @@ int main() {
 	strcpy(input.name[1], "Product_A");
 	strcpy(input.name[2], "Product_A");
 	strcpy(input.name[3], "Product_A");
-	printf("flag2");
 
 	dateinput(input.order_due[0], 2020, 4, 20);
 	dateinput(input.order_due[1], 2020, 4, 21);
@@ -301,7 +285,6 @@ int main() {
 
 	dateinput(input.startorder, 2020, 3, 20);
 	dateinput(input.endorder, 2020, 5, 20);
-
 
 	//
 
@@ -319,9 +302,8 @@ int main() {
 		printf("here");
 
 		FCFS(input, resultx, resulty, resultz, inputlength);
-		for (int i = 0; i < 3; i++) {
-			printf("%d",input.production_by_date[i]);
-		}
+
+		
 		//send to part3
 		//OutputModule(resultx, "FCFS")
 		//OutputModule(resulty, "FCFS")
