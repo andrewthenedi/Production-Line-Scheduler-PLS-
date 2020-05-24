@@ -177,7 +177,13 @@ int main()
     char * startDate[100];
     char * endDate[100];
     char * dueDate[100];
-    char alg[100][100]; 
+    char alg[100][100];
+    
+    // for addBATCH
+    char batch[100][30];
+    int batch_n = 0; 
+    int isbatch = 0; // boolean value to check if there is addBATCH command
+    int batch_i = 0;
 
     // status codes    
     int i = 0, status, n, j = 0;
@@ -194,11 +200,23 @@ int main()
     printf("~~WELCOME TO PLS~~\n");
     while (status == 0)
     {
-        printf("Please enter:\n");
-        printf("i is now %d\n", i);
-        fgets(userInput, sizeof userInput, stdin);
+       
 
-        from = userInput;
+        if(isbatch){
+            if(batch_i < batch_n){
+                strcpy(from, batch[batch_i++]);
+            }
+            else{
+                isbatch = 0; 
+                continue; 
+            }
+        }
+        else{
+             printf("Please enter:\n");
+            printf("i is now %d\n", i);
+            fgets(userInput, sizeof userInput, stdin);
+            from = userInput;
+        }
         // token = strtok(from, blank);
 
     
@@ -523,6 +541,40 @@ int main()
 
             // Schedule(input, start, end, due, alg, i);    dal's function
         }
+        else if(strcmp(req, "addBATCH") == 0){
+            char tempdate[30];
+            memset(tempdate, 0, 30);
+            /*Split again*/
+            for(int k = end1; k < strlen(from); k++){
+                 
+                if(from[k] != ' '){
+                    from1 = k; 
+                    end1 = k; 
+                    while(from[end1] != ' ' && end1 < strlen(from)) end1++;
+                    getsubstring(from, tempdate, from1, end1);
+                    break;
+                }
+            }
+            FILE *fd;
+            char s[100];
+            fd = fopen(tempdate, "r"); 
+            while(fgets(s, 50, fd) != NULL) batch_n++;
+            
+            rewind(fd);
+
+            for(int k = 0; k < batch_n && k < 100; k++){
+
+                fgets(s, 100, fd);
+                int len = strlen(s);
+                // if(len > 0 && s[len-1] == '\n') s[len-1] = 0;
+                strcpy(batch[k], s);
+                printf("%s check\n", s);
+            }
+
+            isbatch = 1;
+
+            // printf("%s test\n", tempdate);
+        }
         else
         {
             printf("Invalid Input!\n");   
@@ -535,3 +587,4 @@ int main()
         j++;
     }
 }
+
