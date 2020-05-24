@@ -124,7 +124,7 @@ void OutputModule(struct Order resultstack, int length, char* alg){
     sprintf(enddate, "%d-%d-%d", resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
 
     printf("Plant_%c (%d per day) \n", resultstack.plant, getplantvalue(resultstack.plant) );
-    printf("%s to %s \n", startdate, enddate);
+    printf("%s to %s \n \n", startdate, enddate);
 
     printf("Date    Product_Name    Order_Number    Quantity(Produced)  Due_Date \n");
 
