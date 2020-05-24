@@ -15,7 +15,6 @@ struct Order {
 	char name[100][100];
 	struct Date order_due[100];
 	int quantity[100];
-	struct Date dates[100];
 	char process_by_date[100][100];
 	int production_by_date[100];
 	struct Date startorder;
@@ -58,14 +57,16 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 	int startint = datetoday(orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
 	int endint = datetoday(orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
-
-	/*char order_id[100][100];
+	int currday = startint;
+	/*
+	char order_id[100][100];
 	char name[100][100];
 	struct Date order_due[100];
 	int quantity[100];
-	struct Date dates[100];
+
 	char process_by_date[100][100];
 	int production_by_date[100];
+
 	struct Date startorder;
 	struct Date endorder;
 	char plant;*/
@@ -76,6 +77,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 	int plant_y = 400;
 	int plant_z = 500;
 
+	//plant production queue
 	int prodx=0;
 	int prody=0;
 	int prodz=0;
@@ -84,31 +86,55 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 	int yiter = 0;
 	int ziter = 0;
 
-	int i = 0;
-	for (int curr = 0; curr < length; curr++) 
+	int curr = 0;
+
+	while(currday != endint)
 	{
+		//assign production to factories x to y to z
 		if (prodx == 0)
 		{
-			prodx = orderstack.quantity[curr];
+			//initialize starting values 
 			strcpy(resultx.order_id[xiter], orderstack.order_id[curr]);
+			strcpy(resultx.name[xiter], orderstack.name[curr]);
+			resultx.order_due[xiter] = orderstack.order_due[curr];		//shallow copy
+			resultx.quantity[xiter] = orderstack.quantity[curr];
+
+			prodx = orderstack.quantity[curr];
 			xiter++;
 		}
-		else if (prody == 0)
+		if (prody == 0)
 		{
-			prody = orderstack.quantity[curr];
+			//initialize starting values 
 			strcpy(resulty.order_id[yiter], orderstack.order_id[curr]);
+			strcpy(resulty.name[yiter], orderstack.name[curr]);
+			resulty.order_due[yiter] = orderstack.order_due[curr];		//shallow copy
+			resulty.quantity[yiter] = orderstack.quantity[curr];
+
+			prody = orderstack.quantity[curr];
 			yiter++;
 		}
-		else if (prodz == 0)
+		if (prodz == 0)
 		{
-			prodz = orderstack.quantity[curr];
+			//initialize starting values 
 			strcpy(resultz.order_id[ziter], orderstack.order_id[curr]);
+			strcpy(resultz.name[ziter], orderstack.name[curr]);
+			resultz.order_due[ziter] = orderstack.order_due[curr];		//shallow copy
+			resultz.quantity[ziter] = orderstack.quantity[curr];
+
+			prodz = orderstack.quantity[curr];
 			ziter++;
 		}
-		else //alll the factories are preoccupied
-		{
 
-		}
+		//process values
+
+
+
+
+		prodx = prodx - 300;
+		prody = prody - 400;
+		prodz = prodz - 500;
+
+		currday++;
 	}
 
 
