@@ -99,7 +99,7 @@ void OutputModule(struct Order resultstack, char* alg) {
 	startday = datetoday(resultstack.startorder.year, resultstack.startorder.month, resultstack.startorder.day);
 	endday = datetoday(resultstack.endorder.year, resultstack.endorder.month, resultstack.endorder.day);
 	totaldays = endday - startday + 1; // +1 to include last day
-	//printf("totaldays is %d \n", totaldays);
+	
 
 	// fill datelist with datelist_element
 	for (int i = 0; i < totaldays; i++) { // iterate day, update year & month
@@ -191,11 +191,10 @@ void OutputModule(struct Order resultstack, char* alg) {
 void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length)
 {
 
-	// printf("start %d %d %d", orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
-	// printf(", end %d %d %d\n", orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
+	
 	int startint = datetoday(orderstack.startorder.year, orderstack.startorder.month, orderstack.startorder.day);
 	int endint = datetoday(orderstack.endorder.year, orderstack.endorder.month, orderstack.endorder.day);
-	// printf("date start %d, date end %d\n", startint, endint);
+	
 	int currday = 0;
 	int endday = endint - startint;
 
@@ -248,7 +247,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 				strcpy(resultx.name[xiter], orderstack.name[curr]);
 				resultx.order_due[xiter] = orderstack.order_due[curr];		//shallow copy
 				resultx.quantity[xiter] = orderstack.quantity[curr];
-				// printf("Order for plant x %s\n", resultx.name[xiter]);
+				
 				prodx = orderstack.quantity[curr];
 				xiter++;
 				curr++;
@@ -256,7 +255,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			else
 			{
 				endprodx = 1;
-				//printf("x is ending\n");
+				
 			}
 		}
 		if (prody == 0)
@@ -276,7 +275,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			else
 			{
 				endprody = 1;
-				// printf("y is ending\n");
+				
 			}
 		}
 		if (prodz == 0)
@@ -296,7 +295,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 			else
 			{
 				endprodz = 1;
-				// printf("z is ending\n");
+				
 			}
 		}
 
@@ -307,9 +306,9 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 		{
 
 			strcpy(resultx.order_id_by_date[currday], resultx.order_id[xiter - 1]);
-			//printf("testing\n");
+			
 			resultx.production_by_date[currday] = 300;
-			//printf("Plant X is doing order %s\n", resultx.order_id_by_date[currday]);
+			
 			if (prodx < 300)
 			{
 				resultx.production_by_date[currday] = prodx;
@@ -317,7 +316,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 			prodx = prodx - 300;
 			if (prodx < 0) {
-				//printf("x is reset\n");
+				
 				prodx = 0;
 			}
 		}
@@ -332,7 +331,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 		{
 			strcpy(resulty.order_id_by_date[currday], resulty.order_id[yiter - 1]);
 			resulty.production_by_date[currday] = 400;
-			// printf("Plant Y is doing order %s\n", resulty.order_id_by_date[currday]);
+			
 
 			if (prody < 400)
 			{
@@ -341,7 +340,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 			prody = prody - 400;
 			if (prody < 0) {
-				//printf("y is reset\n");
+				
 				prody = 0;
 			}
 		}
@@ -356,7 +355,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 		{
 			strcpy(resultz.order_id_by_date[currday], resultz.order_id[ziter - 1]);
 			resultz.production_by_date[currday] = 500;
-			// printf("Plant Z is doing order %s\n", resultz.order_id_by_date[currday]);
+			
 
 			if (prodz < 500)
 			{
@@ -377,13 +376,7 @@ void FCFS(struct Order orderstack, struct Order resultx, struct Order resulty, s
 
 
 	}
-	for (int i = 0; i < endday; i++)
-	{
-		// printf("`");
-		// printf("day %d, Plant X is doing %d, the product is %s\n", i + 1, resultx.production_by_date[i], resultx.order_id_by_date[i]);
-		// printf("day %d, Plant Y is doing %d, the product is %s\n", i + 1, resulty.production_by_date[i], resulty.order_id_by_date[i]);
-		// printf("day %d, Plant Z is doing %d, the product is %s\n", i + 1, resultz.production_by_date[i], resultz.order_id_by_date[i]);
-	}
+	
 	printf("------------------SUMMARY RESULT------------------ \n");
 
 	OutputModule(resultx, "FCFS");
@@ -396,7 +389,7 @@ int main()
     
 
     // buffers
-    char* from, userInput[100];
+    char from[100], userInput[100];
     char req[30];
     char * startDate[100];
     char * endDate[100];
@@ -404,7 +397,7 @@ int main()
     char alg[100][100];
     
     // for addBATCH
-    char batch[100][30];
+    char batch[100][50];
     int batch_n = 0; 
     int isbatch = 0; // boolean value to check if there is addBATCH command
     int batch_i = 0;
@@ -422,13 +415,20 @@ int main()
     struct Order input;
 
     printf("~~WELCOME TO PLS~~\n");
+    batch_i = 0;
     while (status == 0)
     {
        
 
         if(isbatch){
+               
             if(batch_i < batch_n){
-                strcpy(from, batch[batch_i++]);
+               
+               
+                
+                strcpy(from, batch[batch_i]);
+                batch_i+=1;
+                
             }
             else{
                 isbatch = 0; 
@@ -438,9 +438,10 @@ int main()
         else{
              printf("\n Please enter:\n");
             fgets(userInput, sizeof userInput, stdin);
-            from = userInput;
+            
+            strcpy(from, userInput);
         }
-        // token = strtok(from, blank);
+       
 
     
         int from1, end1;
@@ -451,16 +452,15 @@ int main()
                 from1 = k; 
                 end1 = k; 
                 while(from[end1] != ' ' && end1 < strlen(from))   end1++;
-                // printf("from is %d, end is %d\n", from1, end1); 
+                
                 getsubstring(from, req, from1, end1);
-                // printf("its %s\n", req);
+               
                 break;
             }
         }
 
-        // req[j] = token;
-        // token = strtok(NULL, blank);
-        // printf("%s\n", req);
+       
+        
         if (strcmp(req, "addPERIOD") == 0)
         {
             
@@ -493,37 +493,42 @@ int main()
             input.startorder.year = atoi(date1);
             
 
-            memset(date1, 0, 30);
+            // memset(date1, 0, 30);
+            char date2[15];
 
             for(int k = end2; k < strlen(tempdate); k++){ 
                 if(tempdate[k] != '-'){
                     from2 = k; 
                     end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
+                    // while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++; -- Doesn't work on apollo
+                    end2 += 2; // hardcoded since month and date is only 2
+                    getsubstring(tempdate, date2, from2, end2);
                     break;
                 }
             }
             
-            input.startorder.month = atoi(date1);
+            input.startorder.month = atoi(date2);
+            
+            char date3[15];
 
-            memset(date1, 0, 30);
+            // memset(date1, 0, 30);
 
             for(int k = end2; k < strlen(tempdate); k++){ 
                 if(tempdate[k] != '-'){
                     from2 = k; 
                     end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
+                    // while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++; -- Doesn't work on apollo
+                    end2 += 2;
+                    getsubstring(tempdate, date3, from2, end2);
                     break;
                 }
             }
             
-            input.startorder.day = atoi(date1);
-
+            input.startorder.day = atoi(date3);
+            
             /* DATE 1 IS DONE */ 
 
-            memset(tempdate, 0, 30);
+            // memset(tempdate, 0, 30);
 
             /*Split again*/
             for(int k = end1; k < strlen(from); k++){
@@ -551,40 +556,45 @@ int main()
                 }
             }
             input.endorder.year = atoi(date1);
-            // printf("check2 %d\n", start->year[0]);
+           
 
-            memset(date1, 0, 30);
-
-            for(int k = end2; k < strlen(tempdate); k++){ 
-                if(tempdate[k] != '-'){
-                    from2 = k; 
-                    end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
-                    break;
-                }
-            }
-            // printf("check %s\n", date1);
-            input.endorder.month = atoi(date1);
-
-            memset(date1, 0, 30);
+            // memset(date1, 0, 30);
+            char date4[15];
 
             for(int k = end2; k < strlen(tempdate); k++){ 
                 if(tempdate[k] != '-'){
                     from2 = k; 
                     end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
+                    // while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    end2 += 2; 
+                    getsubstring(tempdate, date4, from2, end2);
                     break;
                 }
             }
-            input.endorder.day = atoi(date1);
+           
+            input.endorder.month = atoi(date4);
+
+            
+            char date5[15];
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    // while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
+                    end2 += 2; 
+                    getsubstring(tempdate, date5, from2, end2);
+                    break;
+                }
+            }
+            input.endorder.day = atoi(date5);
         }
         else if (strcmp(req, "addORDER") == 0)
         {
-            // printf("request is %s\n", from);
+            
             char tempdate[30];
-            memset(tempdate, 0, 30);
+            
+            
             /*Split again*/
             for(int k = end1; k < strlen(from); k++){
                 
@@ -597,11 +607,12 @@ int main()
                 }
             }
 
-            // printf("ez %s\n", tempdate);
+            
             strcpy(input.order_id[i], tempdate);
-            // input->orderID[i] = tempdate; 
-            // printf("%s\n", input->orderID[i]);
+            
+            
             memset(tempdate, 0, 30);
+           
 
             // the date 
             for(int k = end1; k < strlen(from); k++){
@@ -615,8 +626,9 @@ int main()
                 }
             }
             
+            
             char date1[15];
-            // printf("%s\n", tempdate);
+            
             int from2, end2; 
             /* split the - in the date */
              for(int k = 0; k < strlen(tempdate); k++){ 
@@ -629,34 +641,40 @@ int main()
                 }
             }
             input.order_due[i].year = atoi(date1);
-            // printf("check2 %d\n", start->year[0]);
+            
 
-            memset(date1, 0, 30);
-
-            for(int k = end2; k < strlen(tempdate); k++){ 
-                if(tempdate[k] != '-'){
-                    from2 = k; 
-                    end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
-                    break;
-                }
-            }
-            // printf("check %s\n", date1);
-            input.order_due[i].month = atoi(date1);
-            memset(date1, 0, 30);
+             // memset(date1, 0, 30);
+            char date2[15];
 
             for(int k = end2; k < strlen(tempdate); k++){ 
                 if(tempdate[k] != '-'){
                     from2 = k; 
                     end2 = k; 
-                    while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++;
-                    getsubstring(tempdate, date1, from2, end2);
+                    // while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++; -- Doesn't work on apollo
+                    end2 += 2; // hardcoded since month and date is only 2
+                    getsubstring(tempdate, date2, from2, end2);
                     break;
                 }
             }
-            // printf("check %s\n", date1);
-            input.order_due[i].day = atoi(date1);
+            
+            input.order_due[i].month = atoi(date2);
+            
+            char date3[15];
+
+            // memset(date1, 0, 30);
+
+            for(int k = end2; k < strlen(tempdate); k++){ 
+                if(tempdate[k] != '-'){
+                    from2 = k; 
+                    end2 = k; 
+                    // while(tempdate[end2] != '-' && end2 < strlen(tempdate)) end2++; -- Doesn't work on apollo
+                    end2 += 2;
+                    getsubstring(tempdate, date3, from2, end2);
+                    break;
+                }
+            }
+            
+            input.order_due[i].day = atoi(date3);
 
             memset(tempdate, 0, 30);
 
@@ -671,12 +689,12 @@ int main()
                 }
             }
 
-            // printf("ez %s\n", tempdate);
+            
             input.quantity[i] = atoi(tempdate);
 
 
             memset(tempdate, 0, 30);
-            // printf("end1 is in = %d\n", end1);
+            
             for(int k = end1; k < strlen(from); k++){
                 
                 if(from[k] != ' '){
@@ -688,8 +706,8 @@ int main()
                 }
             }
 
-            // printf("name is %s\n", tempdate);
-            // input->productName[i] = tempdate;
+            
+  
             strcpy(input.name[i], tempdate);
             i++;
             // split the date
@@ -718,81 +736,74 @@ int main()
 
 
             strcpy(alg[i], tempalg);
-            // for(int n = 0; n < i; n++){
-            //     printf("Order id is %s\n", input.order_id[n]);
-            //     printf("Product name is %s\n", input.name[n]);
-            //     printf("Quantity is %d\n", input.quantity[n]);
-            //     printf("Year is %d %d %d\n", input.order_due[n].year, input.order_due[n].month, input.order_due[n].day);
-            // }
-            // printf("%d %d %d\n", input.startorder.year, input.startorder.month, input.startorder.day);
-            // printf("%d %d %d\n", input.endorder.year, input.endorder.month, input.endorder.day);
+           
+
+        struct Order resultx;
+        struct Order resulty;
+        struct Order resultz;
+
+        //struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length
+        
+        
+        
 
 
-    struct Order resultx;
-	struct Order resulty;
-	struct Order resultz;
+        if (strcmp(tempalg, "FCFS") == 0)
+        {
 
-	//struct Order orderstack, struct Order resultx, struct Order resulty, struct Order resultz, int length
-	
-	
-	 
+            FCFS(input, resultx, resulty, resultz, i);
+        }
+        else if (strcmp(tempalg, "SJF") == 0)
+        {
+            /*This is SJF now*/
+            for (int k = 0; k < i; k++) {
+                for (int j = 0; j < i - k - 1; j++) {
+                    if (input.quantity[j] > input.quantity[j + 1]) {
+                        // swapping, its not easy on the eye
+                        char tempchar[100];
+                        int tempint;
+                        struct Date tempdate;
+                        strcpy(tempchar, input.order_id[j]);
+                        strcpy(input.order_id[j], input.order_id[j + 1]);
+                        strcpy(input.order_id[j + 1], tempchar);
 
+                        //reset 
+                        memset(tempchar, 0, 100);
+                        strcpy(tempchar, input.name[j]);
+                        strcpy(input.name[j], input.name[j + 1]);
+                        strcpy(input.name[j + 1], tempchar);
 
-	if (strcmp(tempalg, "FCFS") == 0)
-	{
+                        //reset char
+                        memset(tempchar, 0, 100);
+                        tempdate = input.order_due[j];
+                        input.order_due[j] = input.order_due[j + 1];
+                        input.order_due[j + 1] = tempdate;
 
-		FCFS(input, resultx, resulty, resultz, i);
-	}
-	else if (strcmp(tempalg, "SJF") == 0)
-	{
-		/*This is SJF now*/
-		for (int k = 0; k < i; k++) {
-			for (int j = 0; j < i - k - 1; j++) {
-				if (input.quantity[j] > input.quantity[j + 1]) {
-					// swapping, its not easy on the eye
-					char tempchar[100];
-					int tempint;
-					struct Date tempdate;
-					strcpy(tempchar, input.order_id[j]);
-					strcpy(input.order_id[j], input.order_id[j + 1]);
-					strcpy(input.order_id[j + 1], tempchar);
+                        tempint = input.quantity[j];
+                        input.quantity[j] = input.quantity[j + 1];
+                        input.quantity[j + 1] = tempint;
 
-					//reset 
-					memset(tempchar, 0, 100);
-					strcpy(tempchar, input.name[j]);
-					strcpy(input.name[j], input.name[j + 1]);
-					strcpy(input.name[j + 1], tempchar);
+                        //order_id_by_date and production_by_date no need to swap\
+                        // the rest too
 
-					//reset char
-					memset(tempchar, 0, 100);
-					tempdate = input.order_due[j];
-					input.order_due[j] = input.order_due[j + 1];
-					input.order_due[j + 1] = tempdate;
-
-					tempint = input.quantity[j];
-					input.quantity[j] = input.quantity[j + 1];
-					input.quantity[j + 1] = tempint;
-
-					//order_id_by_date and production_by_date no need to swap\
-                    // the rest too
-
-				}
-			}
-		}
-		//pass sjf to fcfs for processing 
-		FCFS(input, resultx, resulty, resultz, i);
+                    }
+                }
+            }
+            //pass sjf to fcfs for processing 
+            FCFS(input, resultx, resulty, resultz, i);
 		
-	}
-	else
-	{
-		printf("error input");
-	}
+        }
+        else
+        {
+            printf("error input");
+        }
 
             // Schedule(input, start, end, due, alg, i);    dal's function
         }
         else if(strcmp(req, "addBATCH") == 0){
             char tempdate[30];
             memset(tempdate, 0, 30);
+            
             /*Split again*/
             for(int k = end1; k < strlen(from); k++){
                  
@@ -805,37 +816,33 @@ int main()
                 }
             }
             FILE *fd;
-            char s[100];
+            char s[50];
             fd = fopen(tempdate, "r"); 
             while(fgets(s, 50, fd) != NULL) batch_n++;
             
             rewind(fd);
 
             for(int k = 0; k < batch_n; k++){
-                memset(s, 0, 100);
-                fgets(s, 100, fd);
+                memset(s, 0, 50);
+                fgets(s, 50, fd);
                 int len = strlen(s);
                 
                 strcpy(batch[k], s);
-                batch[k][len] = 0;
-                // printf("copied string %s\n The array string %s\n", s, batch[k]);
-                // for(int t = 0; t <= k; t++){
-                //     printf("array %s\n", batch[t]);
-                // }     
+                // batch[k][len] = 0;
+                
+                     
             }
+            
             isbatch = 1;
-
-            // printf("%s test\n", tempdate);
+            
+            
+            
         }
         else
         {
             printf("Invalid Input!\n");   
         }
-        // for (n = 0; n < 3; n++)
-        // {
-        //     printf("%s",req[n]);
-        // }  
-        // printf("%d", j);
+       
         j++;
     }
 }
